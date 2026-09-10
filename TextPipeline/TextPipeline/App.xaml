@@ -1,9 +1,10 @@
 ﻿<Application x:Class="TextPipeline.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:TextPipeline"
+             xmlns:converters="clr-namespace:TextPipeline.Converters"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-         
+        <converters:BoolToColorConverter x:Key="BoolToColor"/>
+        <converters:BoolToTextConverter x:Key="BoolToText"/>
     </Application.Resources>
 </Application>

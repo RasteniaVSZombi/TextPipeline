@@ -1,12 +1,256 @@
 ﻿<Window x:Class="TextPipeline.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:TextPipeline"
-        mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
+        xmlns:vm="clr-namespace:TextPipeline.ViewModels"
+        Title="Операции" Height="600" Width="900"
+        WindowStartupLocation="CenterScreen">
 
+    <Grid Margin="10">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="220"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- Список операций -->
+        <ListBox Grid.Column="0" 
+                 ItemsSource="{Binding Operations}" 
+                 SelectedItem="{Binding SelectedOperation}"
+                 Margin="0,0,10,0"
+                 FontSize="14">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding Name}" Padding="8,10"/>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+
+        <!--  Карточка операции -->
+        <ContentControl Grid.Column="1" 
+                        Content="{Binding SelectedOperation.ViewModel}">
+            <ContentControl.Resources>
+
+                <!-- DataTemplate для NormalizeViewModel -->
+                <DataTemplate DataType="{x:Type vm:NormalizeViewModel}">
+                    <Border BorderBrush="LightGray" BorderThickness="1" Padding="15">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+
+                            <TextBlock Grid.Row="0" Text="Входной текст:" FontWeight="Bold" Margin="0,0,0,5"/>
+                            <TextBox Grid.Row="1" 
+                                     Text="{Binding InputText, UpdateSourceTrigger=PropertyChanged}"
+                                     TextWrapping="Wrap" AcceptsReturn="True"
+                                     VerticalScrollBarVisibility="Auto"
+                                     Margin="0,0,0,10"/>
+
+                            <Button Grid.Row="2" Content="Выполнить" 
+                                    Command="{Binding ExecuteCommand}"
+                                    Padding="30,8" FontSize="14"
+                                    Background="#4CAF50" Foreground="White"
+                                    HorizontalAlignment="Left"
+                                    Margin="0,0,0,15"/>
+
+                            <StackPanel Grid.Row="3" Margin="0,0,0,10">
+                                <StackPanel Orientation="Horizontal" Margin="0,5">
+                                    <Ellipse Width="16" Height="16" 
+                                             Fill="{Binding PreConditionMet, Converter={StaticResource BoolToColor}}"
+                                             Margin="0,0,8,0"/>
+                                    <TextBlock VerticalAlignment="Center" FontSize="13">
+                                        <Run Text="Предусловие: "/>
+                                        <Run Text="{Binding PreConditionMet, Converter={StaticResource BoolToText}}"/>
+                                    </TextBlock>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" Margin="0,5">
+                                    <Ellipse Width="16" Height="16" 
+                                             Fill="{Binding PostConditionMet, Converter={StaticResource BoolToColor}}"
+                                             Margin="0,0,8,0"/>
+                                    <TextBlock VerticalAlignment="Center" FontSize="13">
+                                        <Run Text="Постусловие: "/>
+                                        <Run Text="{Binding PostConditionMet, Converter={StaticResource BoolToText}}"/>
+                                    </TextBlock>
+                                </StackPanel>
+                                <TextBlock Text="{Binding ErrorMessage}" Foreground="Red" 
+                                           Margin="0,5,0,0" TextWrapping="Wrap"/>
+                            </StackPanel>
+
+                            <TextBlock Grid.Row="4" Text="Результат:" FontWeight="Bold" Margin="0,0,0,5"/>
+                            <TextBox Grid.Row="5" Text="{Binding ResultText}" 
+                                     TextWrapping="Wrap" IsReadOnly="True"
+                                     VerticalScrollBarVisibility="Auto"
+                                     Margin="0,0,0,10"/>
+
+                            <Button Grid.Row="6" Content="Показать контракт" 
+                                    Click="ShowContract_Click"
+                                    Padding="30,8" FontSize="14"
+                                    Background="#2196F3" Foreground="White"
+                                    HorizontalAlignment="Left"/>
+                        </Grid>
+                    </Border>
+                </DataTemplate>
+
+                <!-- DataTemplate для FilterViewModel -->
+                <DataTemplate DataType="{x:Type vm:FilterViewModel}">
+                    <Border BorderBrush="LightGray" BorderThickness="1" Padding="15">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+
+                            <TextBlock Grid.Row="0" Text="Входной текст:" FontWeight="Bold" Margin="0,0,0,5"/>
+                            <TextBox Grid.Row="1" 
+                                     Text="{Binding InputText, UpdateSourceTrigger=PropertyChanged}"
+                                     TextWrapping="Wrap" AcceptsReturn="True"
+                                     VerticalScrollBarVisibility="Auto"
+                                     Margin="0,0,0,10"/>
+
+                            <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="0,0,0,10">
+                                <CheckBox Content="Буквы" 
+                                          IsChecked="{Binding LettersOnly}"
+                                          Margin="0,0,15,0" FontSize="13"/>
+                                <CheckBox Content="Цифры" 
+                                          IsChecked="{Binding DigitsOnly}"
+                                          Margin="0,0,15,0" FontSize="13"/>
+                                <CheckBox Content="Прочие" 
+                                          IsChecked="{Binding OthersOnly}"
+                                          FontSize="13"/>
+                            </StackPanel>
+
+                            <Button Grid.Row="3" Content="Выполнить" 
+                                    Command="{Binding ExecuteCommand}"
+                                    Padding="30,8" FontSize="14"
+                                    Background="#4CAF50" Foreground="White"
+                                    HorizontalAlignment="Left"
+                                    Margin="0,0,0,15"/>
+
+                            <StackPanel Grid.Row="4" Margin="0,0,0,10">
+                                <StackPanel Orientation="Horizontal" Margin="0,5">
+                                    <Ellipse Width="16" Height="16" 
+                                             Fill="{Binding PreConditionMet, Converter={StaticResource BoolToColor}}"
+                                             Margin="0,0,8,0"/>
+                                    <TextBlock VerticalAlignment="Center" FontSize="13">
+                                        <Run Text="Предусловие: "/>
+                                        <Run Text="{Binding PreConditionMet, Converter={StaticResource BoolToText}}"/>
+                                    </TextBlock>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" Margin="0,5">
+                                    <Ellipse Width="16" Height="16" 
+                                             Fill="{Binding PostConditionMet, Converter={StaticResource BoolToColor}}"
+                                             Margin="0,0,8,0"/>
+                                    <TextBlock VerticalAlignment="Center" FontSize="13">
+                                        <Run Text="Постусловие: "/>
+                                        <Run Text="{Binding PostConditionMet, Converter={StaticResource BoolToText}}"/>
+                                    </TextBlock>
+                                </StackPanel>
+                                <TextBlock Text="{Binding ErrorMessage}" Foreground="Red" 
+                                           Margin="0,5,0,0" TextWrapping="Wrap"/>
+                            </StackPanel>
+
+                            <TextBlock Grid.Row="5" Text="Результат:" FontWeight="Bold" Margin="0,0,0,5"/>
+                            <TextBox Grid.Row="6" Text="{Binding ResultText}" 
+                                     TextWrapping="Wrap" IsReadOnly="True"
+                                     VerticalScrollBarVisibility="Auto"
+                                     Margin="0,0,0,10"/>
+
+                            <Button Grid.Row="7" Content="Показать контракт" 
+                                    Click="ShowContract_Click"
+                                    Padding="30,8" FontSize="14"
+                                    Background="#2196F3" Foreground="White"
+                                    HorizontalAlignment="Left"/>
+                        </Grid>
+                    </Border>
+                </DataTemplate>
+
+                <!-- DataTemplate для MaskViewModel -->
+                <DataTemplate DataType="{x:Type vm:MaskViewModel}">
+                    <Border BorderBrush="LightGray" BorderThickness="1" Padding="15">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+
+                            <TextBlock Grid.Row="0" Text="Входной текст:" FontWeight="Bold" Margin="0,0,0,5"/>
+                            <TextBox Grid.Row="1" 
+                                     Text="{Binding InputText, UpdateSourceTrigger=PropertyChanged}"
+                                     Margin="0,0,0,10"/>
+
+                            <TextBlock Grid.Row="2" Text="Маска (X — заменяемый символ):" 
+                                       FontWeight="Bold" Margin="0,0,0,5"/>
+                            <TextBox Grid.Row="3" 
+                                     Text="{Binding Mask, UpdateSourceTrigger=PropertyChanged}"
+                                     TextWrapping="Wrap" AcceptsReturn="True"
+                                     VerticalScrollBarVisibility="Auto"
+                                     FontFamily="Consolas"
+                                     Margin="0,0,0,10"/>
+
+                            <Button Grid.Row="4" Content="Выполнить" 
+                                    Command="{Binding ExecuteCommand}"
+                                    Padding="30,8" FontSize="14"
+                                    Background="#4CAF50" Foreground="White"
+                                    HorizontalAlignment="Left"
+                                    Margin="0,0,0,15"/>
+
+                            <StackPanel Grid.Row="5" Margin="0,0,0,10">
+                                <StackPanel Orientation="Horizontal" Margin="0,5">
+                                    <Ellipse Width="16" Height="16" 
+                                             Fill="{Binding PreConditionMet, Converter={StaticResource BoolToColor}}"
+                                             Margin="0,0,8,0"/>
+                                    <TextBlock VerticalAlignment="Center" FontSize="13">
+                                        <Run Text="Предусловие: "/>
+                                        <Run Text="{Binding PreConditionMet, Converter={StaticResource BoolToText}}"/>
+                                    </TextBlock>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" Margin="0,5">
+                                    <Ellipse Width="16" Height="16" 
+                                             Fill="{Binding PostConditionMet, Converter={StaticResource BoolToColor}}"
+                                             Margin="0,0,8,0"/>
+                                    <TextBlock VerticalAlignment="Center" FontSize="13">
+                                        <Run Text="Постусловие: "/>
+                                        <Run Text="{Binding PostConditionMet, Converter={StaticResource BoolToText}}"/>
+                                    </TextBlock>
+                                </StackPanel>
+                                <TextBlock Text="{Binding ErrorMessage}" Foreground="Red" 
+                                           Margin="0,5,0,0" TextWrapping="Wrap"/>
+                            </StackPanel>
+
+                            <TextBlock Grid.Row="6" Text="Результат:" FontWeight="Bold" Margin="0,0,0,5"/>
+                            <TextBox Grid.Row="7" Text="{Binding ResultText}" 
+                                     TextWrapping="Wrap" IsReadOnly="True"
+                                     VerticalScrollBarVisibility="Auto"
+                                     FontFamily="Consolas"
+                                     Margin="0,0,0,10"/>
+
+                            <Button Grid.Row="8" Content="Показать контракт" 
+                                    Click="ShowContract_Click"
+                                    Padding="30,8" FontSize="14"
+                                    Background="#2196F3" Foreground="White"
+                                    HorizontalAlignment="Left"/>
+                        </Grid>
+                    </Border>
+                </DataTemplate>
+
+            </ContentControl.Resources>
+        </ContentControl>
     </Grid>
 </Window>
