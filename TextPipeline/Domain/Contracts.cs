@@ -1,19 +1,93 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace Domain;
 
-namespace Domain
+public record OperationContract(
+    string Title,
+    string Pre,
+    string Post,
+    string Effects,
+    string ValidExample,
+    string InvalidExample
+);
+
+public static class Contracts
 {
-    //public record OperationContract(...
-    //...
-    //...
-    //);
+    public static readonly OperationContract Normalize = new(
+            Title: "Нормализация текста",
 
+            Pre:
+                "Входная строка не должна быть null. " +
+                "Пустая строка допускается.",
 
-    public static class Contracts
-    {
+            Post:
+                "Результат не содержит пробелов в начале и конце, " +
+                "не содержит последовательностей из нескольких пробельных " +
+                "символов и находится в нижнем регистре.",
 
-    }
+            Effects:
+                "Возвращает новую нормализованную строку. " +
+                "При передаче null выбрасывается ArgumentNullException.",
+
+            ValidExample:
+                "Вход: \"  Hello   WORLD\\tTest  \"\n" +
+                "Ожидаемый результат: \"hello world test\"",
+
+            InvalidExample:
+                "Вход: null\n" +
+                "Ожидаемое поведение: ArgumentNullException."
+        );
+
+    public static readonly OperationContract Filter = new(
+            Title: "Фильтрация строк",
+
+            Pre:
+                "Входная строка не должна быть null. " +
+                "Должен быть выбран хотя бы один тип символов: " +
+                "буквы, цифры или прочие.",
+
+            Post:
+                "Каждый символ результата относится к одному из " +
+                "выбранных типов символов.",
+
+            Effects:
+                "Возвращает строку, содержащую только символы выбранных типов. " +
+                "Порядок оставшихся символов сохраняется. " +
+                "При нарушении предусловия выбрасывается соответствующее исключение.",
+
+            ValidExample:
+                "Вход: \"Abc123!@#\", выбраны Буквы и Цифры.\n" +
+                "Ожидаемый результат: \"Abc123\"",
+
+            InvalidExample:
+                "Вход: \"Abc123\", тип символов не выбран.\n" +
+                "Ожидаемое поведение: ArgumentException."
+        );
+
+    public static readonly OperationContract Mask = new(
+            Title: "Применение маски-шаблона",
+
+            Pre:
+                "Входная строка и маска не должны быть null. " +
+                "Маска должна содержать хотя бы один символ '#'. " +
+                "Во входной строке должно быть не меньше символов, " +
+                "чем символов '#' в маске.",
+
+            Post:
+                "Каждый символ '#' в маске заменён очередным символом " +
+                "входной строки. Остальные символы маски сохранены.",
+
+            Effects:
+                "Возвращает строку с применённой маской. " +
+                "При нарушении предусловия выбрасывается соответствующее исключение.",
+
+            ValidExample:
+                "Вход: \"1234567890\"\n" +
+                "Маска: \"+7 (###) ###-##-##\"\n" +
+                "Ожидаемый результат: \"+7 (123) 456-78-90\"",
+
+            InvalidExample:
+                "Вход: \"12345\"\n" +
+                "Маска: \"+7 (###) ###-##-##\"\n" +
+                "Ожидаемое поведение: ArgumentException, " +
+                "так как вход содержит недостаточно символов."
+        );
 }
