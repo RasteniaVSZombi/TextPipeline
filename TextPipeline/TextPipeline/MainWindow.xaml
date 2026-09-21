@@ -2,8 +2,13 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:vm="clr-namespace:TextPipeline"
+        xmlns:conv="clr-namespace:TextPipeline.Converters"
         Title="Операции" Height="600" Width="900"
         WindowStartupLocation="CenterScreen">
+
+    <Window.DataContext>
+        <vm:MainViewModel/>
+    </Window.DataContext>
 
     <Grid Margin="10">
         <Grid.ColumnDefinitions>
@@ -11,27 +16,44 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
-        <!-- Список операций -->
+        <!-- Список операций (слева) -->
         <ListBox Grid.Column="0" 
                  ItemsSource="{Binding Operations}" 
                  SelectedItem="{Binding SelectedOperation}"
                  Margin="0,0,10,0"
-                 FontSize="14">
+                 FontSize="14"
+                 BorderThickness="0">
             <ListBox.ItemTemplate>
                 <DataTemplate>
-                    <TextBlock Text="{Binding Name}" Padding="8,10"/>
+                    <!-- Отображает название операции-->
+                    <TextBlock Text="{Binding DisplayName}" 
+                               Padding="12,8" 
+                               TextWrapping="Wrap"
+                               VerticalAlignment="Center"/>
                 </DataTemplate>
             </ListBox.ItemTemplate>
+
+            <!-- Стиль для выделения выбранного элемента -->
+            <ListBox.ItemContainerStyle>
+                <Style TargetType="ListBoxItem">
+                    <Setter Property="Padding" Value="0"/>
+                    <Style.Triggers>
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter Property="Background" Value="#E3F2FD"/>
+                            <Setter Property="FontWeight" Value="Bold"/>
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </ListBox.ItemContainerStyle>
         </ListBox>
 
-        <!--  Карточка операции -->
-        <ContentControl Grid.Column="1" 
-                        Content="{Binding SelectedOperation.ViewModel}">
+        <!-- Карточка операции (справа) -->
+        <ContentControl Grid.Column="1" Content="{Binding SelectedOperation}">
             <ContentControl.Resources>
 
-                <!-- DataTemplate для NormalizeViewModel -->
-                <!--<DataTemplate DataType="{x:Type vm:NormalizeViewModel}">
-                    <Border BorderBrush="LightGray" BorderThickness="1" Padding="15">
+                <!-- Шаблон для NormalizeViewModel -->
+                <DataTemplate DataType="{x:Type vm:NormalizeViewModel}">
+                    <Border BorderBrush="LightGray" BorderThickness="1" Padding="15" CornerRadius="4">
                         <Grid>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto"/>
@@ -60,24 +82,22 @@
                             <StackPanel Grid.Row="3" Margin="0,0,0,10">
                                 <StackPanel Orientation="Horizontal" Margin="0,5">
                                     <Ellipse Width="16" Height="16" 
-                                             Fill="{Binding PreConditionMet, Converter={StaticResource BoolToColor}}"
+                                             Fill="{Binding IsPreSatisfied, Converter={StaticResource BoolToColor}}"
                                              Margin="0,0,8,0"/>
                                     <TextBlock VerticalAlignment="Center" FontSize="13">
                                         <Run Text="Предусловие: "/>
-                                        <Run Text="{Binding PreConditionMet, Converter={StaticResource BoolToText}}"/>
+                                        <Run Text="{Binding IsPreSatisfied, Converter={StaticResource BoolToText}}"/>
                                     </TextBlock>
                                 </StackPanel>
                                 <StackPanel Orientation="Horizontal" Margin="0,5">
                                     <Ellipse Width="16" Height="16" 
-                                             Fill="{Binding PostConditionMet, Converter={StaticResource BoolToColor}}"
+                                             Fill="{Binding IsPostSatisfied, Converter={StaticResource BoolToColor}}"
                                              Margin="0,0,8,0"/>
                                     <TextBlock VerticalAlignment="Center" FontSize="13">
                                         <Run Text="Постусловие: "/>
-                                        <Run Text="{Binding PostConditionMet, Converter={StaticResource BoolToText}}"/>
+                                        <Run Text="{Binding IsPostSatisfied, Converter={StaticResource BoolToText}}"/>
                                     </TextBlock>
                                 </StackPanel>
-                                <TextBlock Text="{Binding ErrorMessage}" Foreground="Red" 
-                                           Margin="0,5,0,0" TextWrapping="Wrap"/>
                             </StackPanel>
 
                             <TextBlock Grid.Row="4" Text="Результат:" FontWeight="Bold" Margin="0,0,0,5"/>
@@ -94,10 +114,10 @@
                         </Grid>
                     </Border>
                 </DataTemplate>
--->
-                <!-- DataTemplate для FilterViewModel -->
-                <!--<DataTemplate DataType="{x:Type vm:FilterViewModel}">
-                    <Border BorderBrush="LightGray" BorderThickness="1" Padding="15">
+
+                <!-- Шаблон для FilterViewModel -->
+                <DataTemplate DataType="{x:Type vm:FilterViewModel}">
+                    <Border BorderBrush="LightGray" BorderThickness="1" Padding="15" CornerRadius="4">
                         <Grid>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto"/>
@@ -119,13 +139,13 @@
 
                             <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="0,0,0,10">
                                 <CheckBox Content="Буквы" 
-                                          IsChecked="{Binding LettersOnly}"
+                                          IsChecked="{Binding FilterLetters}"
                                           Margin="0,0,15,0" FontSize="13"/>
                                 <CheckBox Content="Цифры" 
-                                          IsChecked="{Binding DigitsOnly}"
+                                          IsChecked="{Binding FilterDigits}"
                                           Margin="0,0,15,0" FontSize="13"/>
                                 <CheckBox Content="Прочие" 
-                                          IsChecked="{Binding OthersOnly}"
+                                          IsChecked="{Binding FilterOthers}"
                                           FontSize="13"/>
                             </StackPanel>
 
@@ -139,24 +159,22 @@
                             <StackPanel Grid.Row="4" Margin="0,0,0,10">
                                 <StackPanel Orientation="Horizontal" Margin="0,5">
                                     <Ellipse Width="16" Height="16" 
-                                             Fill="{Binding PreConditionMet, Converter={StaticResource BoolToColor}}"
+                                             Fill="{Binding IsPreSatisfied, Converter={StaticResource BoolToColor}}"
                                              Margin="0,0,8,0"/>
                                     <TextBlock VerticalAlignment="Center" FontSize="13">
                                         <Run Text="Предусловие: "/>
-                                        <Run Text="{Binding PreConditionMet, Converter={StaticResource BoolToText}}"/>
+                                        <Run Text="{Binding IsPreSatisfied, Converter={StaticResource BoolToText}}"/>
                                     </TextBlock>
                                 </StackPanel>
                                 <StackPanel Orientation="Horizontal" Margin="0,5">
                                     <Ellipse Width="16" Height="16" 
-                                             Fill="{Binding PostConditionMet, Converter={StaticResource BoolToColor}}"
+                                             Fill="{Binding IsPostSatisfied, Converter={StaticResource BoolToColor}}"
                                              Margin="0,0,8,0"/>
                                     <TextBlock VerticalAlignment="Center" FontSize="13">
                                         <Run Text="Постусловие: "/>
-                                        <Run Text="{Binding PostConditionMet, Converter={StaticResource BoolToText}}"/>
+                                        <Run Text="{Binding IsPostSatisfied, Converter={StaticResource BoolToText}}"/>
                                     </TextBlock>
                                 </StackPanel>
-                                <TextBlock Text="{Binding ErrorMessage}" Foreground="Red" 
-                                           Margin="0,5,0,0" TextWrapping="Wrap"/>
                             </StackPanel>
 
                             <TextBlock Grid.Row="5" Text="Результат:" FontWeight="Bold" Margin="0,0,0,5"/>
@@ -173,10 +191,10 @@
                         </Grid>
                     </Border>
                 </DataTemplate>
-                -->
-                <!-- DataTemplate для MaskViewModel -->
-                <!--<DataTemplate DataType="{x:Type vm:MaskViewModel}">
-                    <Border BorderBrush="LightGray" BorderThickness="1" Padding="15">
+
+                <!-- Шаблон для MaskViewModel -->
+                <DataTemplate DataType="{x:Type vm:MaskViewModel}">
+                    <Border BorderBrush="LightGray" BorderThickness="1" Padding="15" CornerRadius="4">
                         <Grid>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto"/>
@@ -195,7 +213,7 @@
                                      Text="{Binding InputText, UpdateSourceTrigger=PropertyChanged}"
                                      Margin="0,0,0,10"/>
 
-                            <TextBlock Grid.Row="2" Text="Маска (X — заменяемый символ):" 
+                            <TextBlock Grid.Row="2" Text="Маска (символ '#' — место подстановки):" 
                                        FontWeight="Bold" Margin="0,0,0,5"/>
                             <TextBox Grid.Row="3" 
                                      Text="{Binding Mask, UpdateSourceTrigger=PropertyChanged}"
@@ -214,24 +232,22 @@
                             <StackPanel Grid.Row="5" Margin="0,0,0,10">
                                 <StackPanel Orientation="Horizontal" Margin="0,5">
                                     <Ellipse Width="16" Height="16" 
-                                             Fill="{Binding PreConditionMet, Converter={StaticResource BoolToColor}}"
+                                             Fill="{Binding IsPreSatisfied, Converter={StaticResource BoolToColor}}"
                                              Margin="0,0,8,0"/>
                                     <TextBlock VerticalAlignment="Center" FontSize="13">
                                         <Run Text="Предусловие: "/>
-                                        <Run Text="{Binding PreConditionMet, Converter={StaticResource BoolToText}}"/>
+                                        <Run Text="{Binding IsPreSatisfied, Converter={StaticResource BoolToText}}"/>
                                     </TextBlock>
                                 </StackPanel>
                                 <StackPanel Orientation="Horizontal" Margin="0,5">
                                     <Ellipse Width="16" Height="16" 
-                                             Fill="{Binding PostConditionMet, Converter={StaticResource BoolToColor}}"
+                                             Fill="{Binding IsPostSatisfied, Converter={StaticResource BoolToColor}}"
                                              Margin="0,0,8,0"/>
                                     <TextBlock VerticalAlignment="Center" FontSize="13">
                                         <Run Text="Постусловие: "/>
-                                        <Run Text="{Binding PostConditionMet, Converter={StaticResource BoolToText}}"/>
+                                        <Run Text="{Binding IsPostSatisfied, Converter={StaticResource BoolToText}}"/>
                                     </TextBlock>
                                 </StackPanel>
-                                <TextBlock Text="{Binding ErrorMessage}" Foreground="Red" 
-                                           Margin="0,5,0,0" TextWrapping="Wrap"/>
                             </StackPanel>
 
                             <TextBlock Grid.Row="6" Text="Результат:" FontWeight="Bold" Margin="0,0,0,5"/>
@@ -249,7 +265,6 @@
                         </Grid>
                     </Border>
                 </DataTemplate>
-                -->
             </ContentControl.Resources>
         </ContentControl>
     </Grid>

@@ -19,9 +19,22 @@ namespace TextPipeline
     /// </summary>
     public partial class ContractWindow : Window
     {
+
         public ContractWindow()
         {
             InitializeComponent();
+        }
+
+        private void Close_Click(object sender, RoutedEventArgs e)
+        {
+            DialogResult = true;
+            Close();
+        }
+
+        public string ContractContent
+        {
+            get => ContractText.Text;
+            set => ContractText.Text = value;
         }
     }
 }

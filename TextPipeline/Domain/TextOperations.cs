@@ -27,10 +27,12 @@ public static class TextOperations
 
         string result = Regex.Replace(input.Trim(), @"\s+", " ").ToLowerInvariant();
 
-        // Post: результат не содержит пробелов по краям
-        // и не содержит последовательностей из нескольких whitespace.
-        Debug.Assert(result == result.Trim());
-        Debug.Assert(!Regex.IsMatch(result, @"\s{2,}"));
+        // Post: результат не содержит пробелов по краям;
+        // не содержит последовательностей из нескольких whitespace
+        // и в нижнем регистре
+        Debug.Assert(result == result.Trim(), "Post: результат не содержит пробелов по краям");
+        Debug.Assert(!Regex.IsMatch(result, @"\s{2,}"), "Post: результат не содержит множественных пробелов");
+        Debug.Assert(result == result.ToLowerInvariant(), "Post: результат в нижнем регистре");
 
         return result;
     }
@@ -65,8 +67,11 @@ public static class TextOperations
         // к одному из выбранных типов.
         foreach (char character in result)
         {
-            bool valid = (char.IsLetter(character) && characterTypes.HasFlag(CharacterType.Letters)) || (char.IsDigit(character) && characterTypes.HasFlag(CharacterType.Digits)) || (!char.IsLetterOrDigit(character) && characterTypes.HasFlag(CharacterType.Other));
-            Debug.Assert(valid);
+            bool valid = (char.IsLetter(character) && characterTypes.HasFlag(CharacterType.Letters)) ||
+                (char.IsDigit(character) && characterTypes.HasFlag(CharacterType.Digits)) ||
+                (!char.IsLetterOrDigit(character) && characterTypes.HasFlag(CharacterType.Other));
+
+            Debug.Assert(valid, "Post: каждый символ результата соответствует выбранному типу");
         }
 
         return result;
@@ -104,8 +109,11 @@ public static class TextOperations
         }
 
         // Post: количество символов '#' в маске
-        // соответствует количеству использованных символов входа.
+        // соответствует количеству использованных символов входа
+        // и длина результата равна длине маски
         Debug.Assert(inputIndex == requiredCharacters);
+        Debug.Assert(result.Length == mask.Length, "Post: длина результата равна длине маски");
+
         return result;
     }
 }
