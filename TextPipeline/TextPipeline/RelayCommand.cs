@@ -22,7 +22,7 @@ namespace TextPipeline
         /// Создаёт команду.
         /// </summary>
         /// <param name="execute"> Действие при выполнении команды </param>
-        /// <param name="canExecute"> свойство доступности комманды </param>
+        /// <param name="canExecute"> свойство доступности команды </param>
         public RelayCommand(Action execute, Func<bool> canExecute = null)
         {
             _execute = execute ?? throw new ArgumentNullException(nameof(execute));

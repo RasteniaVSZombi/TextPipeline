@@ -106,7 +106,7 @@ namespace TextPipeline
             if (setOn)
                 SelectedTypes |= flag;//ИЛИ с присваиванием - ставит нужный бит enum на 1 и не трогает остальные
             else
-                SelectedTypes &= ~flag;//И с присваиванием с инверсия - зануление выбранного бита enum
+                SelectedTypes &= ~flag;//И с присваиванием с инверсией - зануление выбранного бита enum
         }
 
         /// <summary>
