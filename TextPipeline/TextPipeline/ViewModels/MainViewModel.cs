@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Collections.ObjectModel;
 
-namespace TextPipeline
+namespace TextPipeline.ViewModels
 {
     /// <summary>
     /// Главная ViewModel приложения.
@@ -32,7 +32,7 @@ namespace TextPipeline
         }
 
         /// <summary>
-        /// Создание списка из трёх операций; выбор первой (Нормализация) по умолчанию, чтобы карточка справа не была пустой при запуске
+        /// Создание списка из трёх операций
         /// </summary>
         public MainViewModel()
         {

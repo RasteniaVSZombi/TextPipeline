@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using Domain;
 
-namespace TextPipeline
+namespace TextPipeline.ViewModels
 {
     /// <summary>
     /// Базовый класс для ViewModel всех трёх операций. Содержит общую инфраструктуру. Каждая конкретная операция наследует этот класс

@@ -27,7 +27,7 @@ public static class Contracts
                 "При передаче null выбрасывается ArgumentNullException.",
 
             ValidExample:
-                "Вход: \"  Hello   WORLD\\tTest  \"\n" +
+                "Вход: \"  Hello    WORLD\nTest  \"\n" +
                 "Ожидаемый результат: \"hello world test\"",
 
             InvalidExample:

@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Domain;
 
-namespace TextPipeline
+namespace TextPipeline.ViewModels
 {
     /// <summary>
     /// ViewModel для операции «Фильтрация по типу символов»
@@ -86,7 +86,7 @@ namespace TextPipeline
         private bool _filterOthers;
 
         /// <summary>
-        /// Привязка к CheckBox «Прочие»
+        /// Привязка к CheckBox «Прочие символы»
         /// </summary>
         public bool FilterOthers
         {

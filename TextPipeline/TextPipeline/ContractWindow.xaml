@@ -1,7 +1,7 @@
 ﻿<Window x:Class="TextPipeline.ContractWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Контракт операции" Height="520" Width="620"
+        Title="Контракт операции" Height="623" Width="620"
         WindowStartupLocation="CenterOwner"
         ResizeMode="NoResize">
 
@@ -20,8 +20,8 @@
             <ScrollViewer VerticalScrollBarVisibility="Auto">
                 <TextBlock x:Name="ContractText"
                            TextWrapping="Wrap"
-                           FontFamily="Consolas" 
-                           FontSize="13"
+                           FontFamily="Arial" 
+                           FontSize="14"
                            LineHeight="20"/>
             </ScrollViewer>
         </Border>

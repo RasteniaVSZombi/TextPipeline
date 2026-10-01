@@ -13,8 +13,8 @@
         <!-- Основной фон окна — мягкий бежевый (Linen) -->
         <SolidColorBrush x:Key="BackgroundBrush" Color="#FAF0E6"/>
 
-        <!-- Фон карточек — белый (контраст с бежевым) -->
-        <SolidColorBrush x:Key="CardBackgroundBrush" Color="#FFFFFF"/>
+        <!-- Фон карточек — почти белый бежевый -->
+        <SolidColorBrush x:Key="CardBackgroundBrush" Color="#FFFFFCF7"/>
 
         <!-- Рамки — тёплый серо-бежевый -->
         <SolidColorBrush x:Key="BorderBrush" Color="#D4C5A9"/>

@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Domain;
 
-namespace TextPipeline
+namespace TextPipeline.ViewModels
 {
     /// <summary>
     /// ViewModel для операции «Нормализация»
