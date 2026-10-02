@@ -34,7 +34,7 @@
 ## Технологии
 
 -   **C# 12.0**
--   **.NET 8**
+-   **.NET 8.0**
 -   **WPF**
 -   **MVVM**
 -   **xUnit**
@@ -318,47 +318,6 @@ Hello123!@
 
 ------------------------------------------------------------------------
 
-# Структура проекта
-
-``` text
-TextPipeline
-│
-├── TextPipeline.sln
-│
-├── TextPipeline
-│   ├── TextPipeline.csproj
-│   ├── MainWindow.xaml
-│   ├── MainWindow.xaml.cs
-│   ├── ContractWindow.xaml
-│   ├── ContractWindow.xaml.cs
-│   │
-│   ├── ViewModels
-│   │   ├── MainViewModel.cs
-│   │   ├── OperationViewModelBase.cs
-│   │   ├── NormalizeViewModel.cs
-│   │   ├── FilterViewModel.cs
-│   │   └── MaskViewModel.cs
-│   │
-│   ├── Converters
-│   │   ├── BoolToColorConverter.cs
-│   │   └── BoolToTextConverter.cs
-│   │
-│   ├── ObservableObject.cs
-│   └── RelayCommand.cs
-│
-├── Domain
-│   ├── Domain.csproj
-│   ├── TextOperations.cs
-│   ├── Contracts.cs
-│   └── Guard.cs
-│
-└── Tests
-    ├── Tests.csproj
-    ├── NormalizeTests.cs
-    ├── FilterTests.cs
-    ├── MaskTests.cs
-    └── UITests.cs
-```
 
 ## Зависимости проектов
 
