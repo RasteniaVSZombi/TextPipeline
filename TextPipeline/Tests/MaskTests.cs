@@ -12,6 +12,7 @@ public class MaskTests
     [Fact]
     public void ApplyMask_StandardPhoneMask_ReturnsFormattedString()
     {
+        // Проверяем форматирование номера телефона по маске.
         var result = TextOperations.ApplyMask(
             "1234567890",
             "+7 (###) ###-##-##");
@@ -22,6 +23,7 @@ public class MaskTests
     [Fact]
     public void ApplyMask_OnePlaceholder_ReturnsOneInputCharacter()
     {
+        // Проверяем замену одного символа # символом из входной строки.
         var result = TextOperations.ApplyMask(
             "123",
             "X#Y");
@@ -32,6 +34,7 @@ public class MaskTests
     [Fact]
     public void ApplyMask_ExactNumberOfCharacters_ReturnsCorrectResult()
     {
+        // Проверяем маску, количество символов которой точно совпадает с вводом.
         var result = TextOperations.ApplyMask(
             "123",
             "###");
@@ -42,6 +45,7 @@ public class MaskTests
     [Fact]
     public void ApplyMask_ExtraInputCharacters_IgnoresExtraCharacters()
     {
+        // Проверяем, что лишние символы входной строки не используются.
         var result = TextOperations.ApplyMask(
             "123456",
             "##-##");
@@ -52,6 +56,7 @@ public class MaskTests
     [Fact]
     public void ApplyMask_MaskWithoutPlaceholder_ThrowsArgumentException()
     {
+        // Проверяем ошибку при отсутствии символов # в маске.
         Assert.Throws<ArgumentException>(() =>
             TextOperations.ApplyMask(
                 "123",
@@ -61,6 +66,7 @@ public class MaskTests
     [Fact]
     public void ApplyMask_InsufficientInputCharacters_ThrowsArgumentException()
     {
+        // Проверяем ошибку, если входных символов недостаточно для маски.
         Assert.Throws<ArgumentException>(() =>
             TextOperations.ApplyMask(
                 "12",
