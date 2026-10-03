@@ -4,6 +4,7 @@
         xmlns:vm="clr-namespace:TextPipeline.ViewModels"
         xmlns:conv="clr-namespace:TextPipeline.Converters"
         Title="Операции" Height="646" Width="1156"
+        Background="#FFFFF7EB"
         WindowStartupLocation="CenterScreen">
 
     <Window.DataContext>
@@ -11,8 +12,13 @@
     </Window.DataContext>
 
     <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="58*"/>
+            <RowDefinition Height="237*"/>
+        </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="264"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="166.1"/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
 
@@ -23,11 +29,11 @@
                 BorderThickness="1.5"
                 CornerRadius="10"
                 Padding="10"
-                Margin="0,0,15,0">
+                Margin="0,0,31,0" Grid.ColumnSpan="2" Grid.RowSpan="2">
             <ListBox ItemsSource="{Binding Operations}"
                      SelectedItem="{Binding SelectedOperation}"
                      Background="Transparent"
-                     BorderThickness="0" Margin="0,0,-12,0">
+                     BorderThickness="0" Margin="-6,0,-6,0">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <TextBlock Text="{Binding DisplayName}"
@@ -42,7 +48,7 @@
         <!-- ПРАВАЯ ЧАСТЬ: Карточка операции -->
         <ScrollViewer Grid.Column="1"
                       VerticalScrollBarVisibility="Auto"
-                      HorizontalScrollBarVisibility="Disabled">
+                      HorizontalScrollBarVisibility="Disabled" Grid.ColumnSpan="2" Margin="264,0,0,0" Grid.RowSpan="2">
             <ContentControl Content="{Binding SelectedOperation}">
                 <ContentControl.Resources>
 

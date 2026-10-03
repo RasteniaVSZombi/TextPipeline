@@ -14,7 +14,7 @@
         <SolidColorBrush x:Key="BackgroundBrush" Color="#FAF0E6"/>
 
         <!-- Фон карточек — почти белый бежевый -->
-        <SolidColorBrush x:Key="CardBackgroundBrush" Color="#FFFFFCF7"/>
+        <SolidColorBrush x:Key="CardBackgroundBrush" Color="#FAF0E6"/>
 
         <!-- Рамки — тёплый серо-бежевый -->
         <SolidColorBrush x:Key="BorderBrush" Color="#D4C5A9"/>

@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="Контракт операции" Height="623" Width="620"
         WindowStartupLocation="CenterOwner"
+        Background="#FFFFF7EB"
         ResizeMode="NoResize">
 
     <Grid Margin="25">
