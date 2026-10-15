@@ -4,6 +4,7 @@ namespace Domain;
 
 public static class Guard
 {
+    //проверяет любое условие которое должно быть выполнено перед методом
     public static void Requires(bool condition, string message)
     {
         if (!condition)
