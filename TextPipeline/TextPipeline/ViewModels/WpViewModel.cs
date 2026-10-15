@@ -22,8 +22,8 @@ public sealed class WpViewModel : ObservableObject
 
     private string _programText = "";
     private string _postcondition = "";
+    private string _postconditionDescription = "";
     private string _precondition = "";
-    private string _hoareTriple = "";
     private string _errorMessage = "";
     private string _stepsText = "";
     private string _definednessConditionsText = "";
@@ -45,6 +45,13 @@ public sealed class WpViewModel : ObservableObject
     /// <summary>Требуемое постусловие Q.</summary>
     public string Postcondition
     {
+        get => _postconditionDescription;
+        set => Set(ref _postconditionDescription, value);
+    }
+
+    /// <summary>Требуемое постусловие Q.</summary>
+    public string PostconditionHuman
+    {
         get => _postcondition;
         set => Set(ref _postcondition, value);
     }
@@ -57,10 +64,10 @@ public sealed class WpViewModel : ObservableObject
     }
 
     /// <summary>Представление тройки Хоара.</summary>
-    public string HoareTriple
+    public string TriadShort
     {
-        get => _hoareTriple;
-        private set => Set(ref _hoareTriple, value);
+        get => _triadShort;
+        set => Set(ref _triadShort, value);
     }
 
     /// <summary>Сообщение об ошибке при разборе или вычислении.</summary>
@@ -76,6 +83,7 @@ public sealed class WpViewModel : ObservableObject
         get => _stepsText;
         private set => Set(ref _stepsText, value);
     }
+
 
     /// <summary>Условия определённости выражений.</summary>
     public string DefinednessConditionsText
@@ -149,12 +157,41 @@ public sealed class WpViewModel : ObservableObject
     /// <summary>Команда загрузки выбранного примера в поля ввода.</summary>
     public RelayCommand LoadExampleCommand { get; }
 
+    private bool _showTriad = false;
+    public bool ShowTriad
+    {
+        get => _showTriad;
+        set => Set(ref _showTriad, value);
+    }
+
+    public RelayCommand ShowTriadCommand { get; }
+
     public WpViewModel()
     {
         Examples = new ObservableCollection<WpExample>(_engine.GetExamples());
+
+        // Устанавливаем первый элемент как выбранный
+        if (Examples.Any())
+            SelectedExample = Examples.First();
+
+
         CalculateCommand = new RelayCommand(Calculate);
         LoadExampleCommand = new RelayCommand(LoadExample, () => SelectedExample is not null);
+        ShowTriadCommand = new RelayCommand(ShowTriadAction);
     }
+
+    private void ShowTriadAction()
+    {
+        if (!IsSuccess) return;
+
+        TriadShort = $"{{ Слабейшее предусловие: {Precondition} }}\n\n" +
+                    $"Программа:\n{ProgramText}\n\n" +
+                    $"{{ Постусловие: {Postcondition} }}";
+
+        ShowTriad = true;
+    }
+
+    private string _triadShort = "";
 
     /// <summary>Переносит текст программы и постусловие выбранного примера в поля ввода.</summary>
     public void LoadExample()
@@ -164,18 +201,20 @@ public sealed class WpViewModel : ObservableObject
 
         ProgramText = SelectedExample.Program;
         Postcondition = SelectedExample.Postcondition;
+        PostconditionHuman = SelectedExample.PostconditionDescription;
+
         (LoadExampleCommand as RelayCommand)?.RaiseCanExecuteChanged();
     }
 
     /// <summary>Вызывает Domain-сервис и публикует результаты для UI.</summary>
     public void Calculate()
     {
+        TriadShort = "";
         WpExecutionResult result = _engine.Execute(ProgramText, Postcondition);
         WpResult calculation = result.Calculation;
 
         IsSuccess = calculation.Success;
         Precondition = calculation.Precondition;
-        HoareTriple = calculation.HoareTriple;
         ErrorMessage = calculation.Error ?? "";
 
         StepsText = string.Join(Environment.NewLine, calculation.Steps);
@@ -186,4 +225,5 @@ public sealed class WpViewModel : ObservableObject
         AssignmentsText = string.Join(Environment.NewLine, result.Assignments);
         ConditionsText = string.Join(Environment.NewLine, result.Conditions);
     }
+
 }

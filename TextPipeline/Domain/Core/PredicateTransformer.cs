@@ -98,52 +98,40 @@ public static class PredicateTransformer
     /// Рекурсивно заменяет все вхождения переменной.
     /// </summary>
     private static Expr ReplaceVariable(
-        Expr expression,
-        string variable,
-        Expr replacement)
+    Expr expression,
+    string variable,
+    Expr replacement)
     {
         switch (expression)
         {
             case VariableExpr v when v.Name == variable:
                 return replacement;
 
-            case UnaryExpr u:
-                return new UnaryExpr(
-                    u.Operator,
-                    ReplaceVariable(
-                        u.Operand,
-                        variable,
-                        replacement));
-
-            case BinaryExpr b:
-                return new BinaryExpr(
-                    ReplaceVariable(
-                        b.Left,
-                        variable,
-                        replacement),
-                    b.Operator,
-                    ReplaceVariable(
-                        b.Right,
-                        variable,
-                        replacement));
-
-            case FunctionExpr f:
-                return new FunctionExpr(
-                    f.Name,
-                    ReplaceVariable(
-                        f.Argument,
-                        variable,
-                        replacement));
-
-            // Числовые и логические константы не изменяются.
+            // Важно: остальные переменные сохраняем без изменений.
+            case VariableExpr:
             case NumberExpr:
             case BooleanExpr:
                 return expression;
 
+            case UnaryExpr u:
+                return new UnaryExpr(
+                    u.Operator,
+                    ReplaceVariable(u.Operand, variable, replacement));
+
+            case BinaryExpr b:
+                return new BinaryExpr(
+                    ReplaceVariable(b.Left, variable, replacement),
+                    b.Operator,
+                    ReplaceVariable(b.Right, variable, replacement));
+
+            case FunctionExpr f:
+                return new FunctionExpr(
+                    f.Name,
+                    ReplaceVariable(f.Argument, variable, replacement));
+
             default:
                 throw new NotSupportedException(
-                    $"Неизвестный тип выражения: " +
-                    $"{expression.GetType().Name}");
+                    $"Неизвестный тип выражения: {expression.GetType().Name}");
         }
     }
 

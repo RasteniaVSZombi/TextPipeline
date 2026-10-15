@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Collections.ObjectModel;
+using WpEngine.Models;
 
 namespace TextPipeline.ViewModels
 {
@@ -31,6 +32,9 @@ namespace TextPipeline.ViewModels
             set => Set(ref _selectedOperation, value);
         }
 
+        private WpViewModel _wpViewModel;
+        public WpViewModel WpViewModel { get => _wpViewModel; set => Set(ref _wpViewModel, value); }
+
         /// <summary>
         /// Создание списка из трёх операций
         /// </summary>
@@ -45,6 +49,8 @@ namespace TextPipeline.ViewModels
 
             //По умолчанию — первая операция
             SelectedOperation = Operations.First();
+
+            WpViewModel = new WpViewModel();
         }
     }
 }

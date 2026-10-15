@@ -1,7 +1,7 @@
-﻿
-namespace WpEngine.Models;
+﻿namespace WpEngine.Models;
 
 public sealed record WpExample(
     string Name,
     string Program,
-    string Postcondition);
+    string Postcondition,
+    string PostconditionDescription = "");

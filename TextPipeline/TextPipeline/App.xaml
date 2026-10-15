@@ -11,7 +11,7 @@
 
         <!--  ЦВЕТОВАЯ ПАЛИТРА (БЕЖЕВАЯ ТЕМА)  -->
         <!-- Основной фон окна — мягкий бежевый (Linen) -->
-        <SolidColorBrush x:Key="BackgroundBrush" Color="#FAF0E6"/>
+        <SolidColorBrush x:Key="BackgroundBrush" Color="#FFFFF7EB"/>
 
         <!-- Фон карточек — почти белый бежевый -->
         <SolidColorBrush x:Key="CardBackgroundBrush" Color="#FAF0E6"/>

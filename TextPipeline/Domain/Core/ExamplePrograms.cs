@@ -1,5 +1,4 @@
-﻿
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using WpEngine.Models;
 
 namespace WpEngine.Core;
@@ -10,6 +9,15 @@ public static class ExamplePrograms
         new List<WpExample>
         {
             new(
+                "Ручной ввод",
+                """
+
+                """,
+                "",
+                ""
+            ),
+
+            new(
                 "Максимум двух чисел",
                 """
                 if a >= b then
@@ -18,7 +26,10 @@ public static class ExamplePrograms
                     max := b
                 end
                 """,
-                "(max >= a) && (max >= b) && ((max == a) || (max == b))"
+                "(max >= a) && (max >= b) && " +
+                "((max == a) || (max == b))",
+                "После выполнения переменная max содержит " +
+                "максимальное из чисел a и b."
             ),
 
             new(
@@ -41,7 +52,11 @@ public static class ExamplePrograms
                     end
                 end
                 """,
-                "(rootsCount >= 0) && (rootsCount <= 2)"
+                "rootsCount > 0",
+                "После выполнения программы уравнение " +
+                "ax² + bx + c = 0 имеет хотя бы один " +
+                "действительный корень. Предполагается, " +
+                "что a не равно нулю."
             ),
 
             new(
@@ -51,7 +66,9 @@ public static class ExamplePrograms
                 y := x * 3
                 z := y - 4
                 """,
-                "z > 10"
+                "z > 10",
+                "После выполнения последовательности значение z " +
+                "должно быть больше 10."
             )
         };
 }
