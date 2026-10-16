@@ -9,6 +9,7 @@
     <Window.DataContext>
         <vm:MainViewModel/>
     </Window.DataContext>
+    
     <TabControl Background="{StaticResource BackgroundBrush}">
         <!-- ВКЛАДКА Текстовый конвертер -->
         <TabItem Header="Текстовый конвертер">
@@ -320,11 +321,11 @@
 
                     <!-- Выбор примера -->
                     <ComboBox Grid.Row="0"
-                 ItemsSource="{Binding Examples}"
-                 SelectedItem="{Binding SelectedExample}"
-                 DisplayMemberPath="Name"
-                 Margin="0 0 0 10"
-                 Width="300"/>
+                         ItemsSource="{Binding Examples}"
+                         SelectedItem="{Binding SelectedExample}"
+                         DisplayMemberPath="Name"
+                         Margin="0 0 0 10"
+                         Width="300"/>
 
                     <!-- Цель (Post) -->
                     <GroupBox Grid.Row="1" Header="Цель (Post)">
@@ -335,24 +336,24 @@
                             </Grid.RowDefinitions>
 
                             <TextBox Grid.Row="0"
-                         Text="{Binding Postcondition}"
-                         FontFamily="Consolas"
-                         Margin="0 0 0 5"/>
+                                 Text="{Binding Postcondition}"
+                                 FontFamily="Consolas"
+                                 Margin="0 0 0 5"/>
 
                             <TextBox Grid.Row="1"
-                         Text="{Binding PostconditionHuman}"
-                         AcceptsReturn="True"
-                         TextWrapping="Wrap"/>
+                                 Text="{Binding PostconditionHuman}"
+                                 AcceptsReturn="True"
+                                 TextWrapping="Wrap"/>
                         </Grid>
                     </GroupBox>
 
                     <!-- Редактор кода -->
                     <GroupBox Grid.Row="2" Header="Код фрагмента">
                         <TextBox Text="{Binding ProgramText}"
-                    AcceptsReturn="True"
-                    FontFamily="Consolas"
-                    Height="150"
-                    Margin="5"/>
+                            AcceptsReturn="True"
+                            FontFamily="Consolas"
+                            Height="150"
+                            Margin="5"/>
                     </GroupBox>
 
                     <!-- Кнопки управления -->
@@ -391,9 +392,9 @@
                         <!-- Шаги вычисления -->
                         <Border Grid.Column="0" Padding="5" BorderThickness="1" BorderBrush="{StaticResource BorderBrush}">
                             <TextBox Text="{Binding StepsText, Mode=OneWay}"
-                           FontFamily="Consolas"
-                           Margin="5"
-                           TextWrapping="Wrap"/>
+                                   FontFamily="Consolas"
+                                   Margin="5"
+                                   TextWrapping="Wrap"/>
                         </Border>
 
                         <!-- Результаты -->
@@ -414,11 +415,11 @@
                                     </Grid.RowDefinitions>
 
                                     <TextBox Grid.Row="0"
-                                Text="{Binding Precondition, Mode=OneWay}"
-                                TextWrapping="Wrap"
-                                IsReadOnly="True"
-                                FontFamily="Consolas"
-                                Margin="0 0 0 5"/>
+                                        Text="{Binding Precondition, Mode=OneWay}"
+                                        TextWrapping="Wrap"
+                                        IsReadOnly="True"
+                                        FontFamily="Consolas"
+                                        Margin="0 0 0 5"/>
                                 </Grid>
                             </GroupBox>
 
@@ -430,11 +431,11 @@
                                     </Grid.RowDefinitions>
 
                                     <TextBox Grid.Row="0"
-                                    Text="{Binding TriadShort}"
-                                    TextWrapping="Wrap"
-                                    IsReadOnly="True"
-                                    FontFamily="Consolas"
-                                    Margin="0 0 0 5"/>
+                                        Text="{Binding TriadShort}"
+                                        TextWrapping="Wrap"
+                                        IsReadOnly="True"
+                                        FontFamily="Consolas"
+                                        Margin="0 0 0 5"/>
                                 </Grid>
                             </GroupBox>
 
@@ -442,16 +443,16 @@
                             <!-- Условия определённости -->
                             <GroupBox Grid.Row="2" Header="Условия определённости">
                                 <TextBox Text="{Binding DefinednessConditionsText, Mode=OneWay}"
-            IsReadOnly="True"
-            FontFamily="Consolas"
-            TextWrapping="Wrap"
-            Margin="5"/>
+                                    IsReadOnly="True"
+                                    FontFamily="Consolas"
+                                    TextWrapping="Wrap"
+                                    Margin="5"/>
                             </GroupBox>
 
                             <!-- Сообщения об ошибках -->
                             <TextBlock Grid.Row="3"
-          Foreground="Red"
-          Text="{Binding ErrorMessage}"/>
+                                Foreground="Red"
+                                Text="{Binding ErrorMessage}"/>
                         </Grid>
                     </Grid>
                 </Grid>

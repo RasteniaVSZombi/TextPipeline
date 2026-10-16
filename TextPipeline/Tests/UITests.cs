@@ -19,10 +19,9 @@ namespace Tests;
 
 public class UITests
 {
-    /// <summary>
-    /// Тесты первой вкладки
-    /// </summary>
-    
+    #region Тесты первой вкладки
+
+
     [Fact]
     public void MainWindow_CanBeCreated()
     {
@@ -357,9 +356,9 @@ public class UITests
         Assert.Equal(3, textBoxCount);
     }
 
-    /// <summary>
-    /// UI-тесты второй вкладки «Конструктор фрагмента».
-    /// </summary>
+    #endregion
+
+    #region UI-тесты второй вкладки «Конструктор фрагмента»
 
     [Fact]
     public void FragmentConstructor_TabExists()
@@ -619,6 +618,8 @@ public class UITests
         {
             var window = new MainWindow();
             var vm = (window.DataContext as TextPipeline.ViewModels.MainViewModel)!.WpViewModel;
+            vm.ProgramText = "z := y - 4";
+            vm.Postcondition = "z > 10";
             vm.Calculate();
             var data = (vm.IsSuccess, vm.Precondition, vm.ErrorMessage);
             window.Close(); return data;
@@ -635,6 +636,8 @@ public class UITests
         {
             var window = new MainWindow();
             var vm = (window.DataContext as TextPipeline.ViewModels.MainViewModel)!.WpViewModel;
+            vm.ProgramText = "z := y - 4";
+            vm.Postcondition = "z > 10";
             vm.Calculate();
             var data = (vm.VariablesText, vm.AssignmentsText, vm.StepsText, vm.StatementCount);
             window.Close(); return data;
@@ -663,6 +666,8 @@ public class UITests
         {
             var window = new MainWindow();
             var vm = (window.DataContext as TextPipeline.ViewModels.MainViewModel)!.WpViewModel;
+            vm.ProgramText = "z := y - 4";
+            vm.Postcondition = "z > 10";
             vm.Calculate();
             vm.ShowTriadCommand.Execute(null);
             var result = vm.TriadShort;
@@ -716,6 +721,10 @@ public class UITests
         if (tab != null) tabs.SelectedItem = tab;
     }
 
+    #endregion
+
+
+    #region Тесты окна контрактов
     [Fact]
     public void ContractWindow_CanBeCreated()
     {
@@ -822,6 +831,10 @@ public class UITests
 
         Assert.Equal("Тестовый контракт", text);
     }
+
+    #endregion
+
+    #region Вспомогательные методы
 
     private static T RunOnUiThread<T>(Func<T> action)
     {
@@ -1047,4 +1060,6 @@ public class UITests
             throw new NotSupportedException();
         }
     }
+
+    #endregion
 }

@@ -45,7 +45,7 @@ public static class TextOperations
     {
         Guard.RequiresNotNull(input, nameof(input));
 
-        //Guard.Requires(characterTypes != CharacterType.None, "Необходимо выбрать хотя бы один тип символов.");
+        Guard.Requires(characterTypes != CharacterType.None, "Необходимо выбрать хотя бы один тип символов.");
 
         string result = string.Empty;
 
@@ -67,7 +67,10 @@ public static class TextOperations
         // к одному из выбранных типов.
         foreach (char character in result)
         {
-            bool valid = (char.IsLetter(character) && characterTypes.HasFlag(CharacterType.Letters)) || (char.IsDigit(character) && characterTypes.HasFlag(CharacterType.Digits)) || (!char.IsLetterOrDigit(character) && characterTypes.HasFlag(CharacterType.Other));
+            bool valid = (char.IsLetter(character) && characterTypes.HasFlag(CharacterType.Letters)) ||
+                (char.IsDigit(character) && characterTypes.HasFlag(CharacterType.Digits)) ||
+                (!char.IsLetterOrDigit(character) && characterTypes.HasFlag(CharacterType.Other));
+
             Debug.Assert(valid, "Post: каждый символ результата соответствует выбранному типу");
         }
 

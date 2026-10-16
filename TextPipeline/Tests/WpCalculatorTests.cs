@@ -284,234 +284,234 @@ end";
         Assert.Contains("(a) != 0", result.DefinednessConditions);
     }
 
-    // ---------- Семантическая проверка ----------
+    /*// ---------- Семантическая проверка ----------
     // Предусловие должно быть истинным в точности тогда, когда программа
     // выполняется без неопределённых операций и постусловие после неё истинно.
 
-    //private static void AssertPreconditionMatchesExecution(
-    //    string program,
-    //    string postcondition,
-    //    string[] inputs,
-    //    int min,
-    //    int max)
-    //{
-    //    WpResult result = Calculate(program, postcondition);
+    private static void AssertPreconditionMatchesExecution(
+      string program,
+      string postcondition,
+      string[] inputs,
+      int min,
+      int max)
+    {
+      WpResult result = Calculate(program, postcondition);
 
-    //    Assert.True(result.Success, result.Error);
+      Assert.True(result.Success, result.Error);
 
-    //    Statement statement = Parser.Parse(program);
+      Statement statement = Parser.Parse(program);
 
-    //    foreach (int[] values in WpInterpreter.Grid(inputs.Length, min, max))
-    //    {
-    //        var state = new Dictionary<string, object>();
+      foreach (int[] values in WpInterpreter.Grid(inputs.Length, min, max))
+      {
+          var state = new Dictionary<string, object>();
 
-    //        for (int i = 0; i < inputs.Length; i++)
-    //            state[inputs[i]] = (double)values[i];
+          for (int i = 0; i < inputs.Length; i++)
+              state[inputs[i]] = (double)values[i];
 
-    //        bool expected = WpInterpreter.PostconditionHoldsAfter(statement, postcondition, state);
-    //        bool actual = WpInterpreter.Holds(result.Precondition, state);
+          bool expected = WpInterpreter.PostconditionHoldsAfter(statement, postcondition, state);
+          bool actual = WpInterpreter.Holds(result.Precondition, state);
 
-    //        string description = string.Join(
-    //            ", ",
-    //            inputs.Select((name, i) => $"{name}={values[i]}"));
+          string description = string.Join(
+              ", ",
+              inputs.Select((name, i) => $"{name}={values[i]}"));
 
-    //        Assert.True(
-    //            expected == actual,
-    //            $"Для состояния ({description}) программа даёт {expected}, " +
-    //            $"а предусловие '{result.Precondition}' даёт {actual}.");
-    //    }
-    //}
+          Assert.True(
+              expected == actual,
+              $"Для состояния ({description}) программа даёт {expected}, " +
+              $"а предусловие '{result.Precondition}' даёт {actual}.");
+      }
+    }
 
-//    [Fact]
-//    public void Precondition_Sequence_MatchesExecution()
-//    {
-//        AssertPreconditionMatchesExecution(
-//            "x := a + 2\ny := x * 3\nz := y - 4",
-//            "z > 10",
-//            new[] { "a" },
-//            -10,
-//            10);
-//    }
+  [Fact]
+  public void Precondition_Sequence_MatchesExecution()
+  {
+      AssertPreconditionMatchesExecution(
+          "x := a + 2\ny := x * 3\nz := y - 4",
+          "z > 10",
+          new[] { "a" },
+          -10,
+          10);
+  }
 
-//    [Fact]
-//    public void Precondition_MaxOfTwoNumbers_HoldsForEveryInput()
-//    {
-//        // Программа «максимум» корректна, поэтому предусловие верно при любых a и b.
-//        const string program = @"
+  [Fact]
+  public void Precondition_MaxOfTwoNumbers_HoldsForEveryInput()
+  {
+      // Программа «максимум» корректна, поэтому предусловие верно при любых a и b.
+      const string program = @"
 //if a >= b then
-//    max := a
+  max := a
 //else
-//    max := b
+  max := b
 //end";
 
-//        const string post = "(max >= a) && (max >= b) && ((max == a) || (max == b))";
+      const string post = "(max >= a) && (max >= b) && ((max == a) || (max == b))";
 
-//        AssertPreconditionMatchesExecution(program, post, new[] { "a", "b" }, -3, 3);
+      AssertPreconditionMatchesExecution(program, post, new[] { "a", "b" }, -3, 3);
 
-//        WpResult result = Calculate(program, post);
+      WpResult result = Calculate(program, post);
 
-//        foreach (int[] values in WpInterpreter.Grid(2, -3, 3))
-//        {
-//            var state = new Dictionary<string, object>
-//            {
-//                ["a"] = (double)values[0],
-//                ["b"] = (double)values[1]
-//            };
+      foreach (int[] values in WpInterpreter.Grid(2, -3, 3))
+      {
+          var state = new Dictionary<string, object>
+          {
+              ["a"] = (double)values[0],
+              ["b"] = (double)values[1]
+          };
 
-//            Assert.True(
-//                WpInterpreter.Holds(result.Precondition, state),
-//                $"Предусловие должно быть истинным при a={values[0]}, b={values[1]}.");
-//        }
-//    }
+          Assert.True(
+              WpInterpreter.Holds(result.Precondition, state),
+              $"Предусловие должно быть истинным при a={values[0]}, b={values[1]}.");
+      }
+  }
 
-//    [Fact]
-//    public void Precondition_WrongMaxProgram_IsNotAlwaysTrue()
-//    {
-//        // В «неверной» программе постусловие выполняется не всегда.
-//        const string program = @"
+  [Fact]
+  public void Precondition_WrongMaxProgram_IsNotAlwaysTrue()
+  {
+      // В «неверной» программе постусловие выполняется не всегда.
+      const string program = @"
 //if a >= b then
-//    max := b
+  max := b
 //else
-//    max := a
+  max := a
 //end";
 
-//        const string post = "(max >= a) && (max >= b)";
+      const string post = "(max >= a) && (max >= b)";
 
-//        AssertPreconditionMatchesExecution(program, post, new[] { "a", "b" }, -3, 3);
+      AssertPreconditionMatchesExecution(program, post, new[] { "a", "b" }, -3, 3);
 
-//        WpResult result = Calculate(program, post);
+      WpResult result = Calculate(program, post);
 
-//        var state = new Dictionary<string, object> { ["a"] = 1.0, ["b"] = 2.0 };
+      var state = new Dictionary<string, object> { ["a"] = 1.0, ["b"] = 2.0 };
 
-//        Assert.False(WpInterpreter.Holds(result.Precondition, state));
-//    }
+      Assert.False(WpInterpreter.Holds(result.Precondition, state));
+  }
 
-//    [Fact]
-//    public void Precondition_QuadraticEquation_RequiresNonZeroAAndNonNegativeDiscriminant()
-//    {
-//        // Для постусловия rootsCount > 0 нужно D >= 0 и a != 0 (иначе деление на 2 * a).
-//        WpExample example = ExamplePrograms.All[2];
+  [Fact]
+  public void Precondition_QuadraticEquation_RequiresNonZeroAAndNonNegativeDiscriminant()
+  {
+      // Для постусловия rootsCount > 0 нужно D >= 0 и a != 0 (иначе деление на 2 * a).
+      WpExample example = ExamplePrograms.All[2];
 
-//        AssertPreconditionMatchesExecution(
-//            example.Program,
-//            example.Postcondition,
-//            new[] { "a", "b", "c" },
-//            -3,
-//            3);
+      AssertPreconditionMatchesExecution(
+          example.Program,
+          example.Postcondition,
+          new[] { "a", "b", "c" },
+          -3,
+          3);
 
-//        WpResult result = Calculate(example.Program, example.Postcondition);
+      WpResult result = Calculate(example.Program, example.Postcondition);
 
-//        Assert.True(result.Success);
+      Assert.True(result.Success);
 
-//        foreach (int[] v in WpInterpreter.Grid(3, -3, 3))
-//        {
-//            double a = v[0], b = v[1], c = v[2];
-//            double discriminant = b * b - 4 * a * c;
+      foreach (int[] v in WpInterpreter.Grid(3, -3, 3))
+      {
+          double a = v[0], b = v[1], c = v[2];
+          double discriminant = b * b - 4 * a * c;
 
-//            var state = new Dictionary<string, object> { ["a"] = a, ["b"] = b, ["c"] = c };
+          var state = new Dictionary<string, object> { ["a"] = a, ["b"] = b, ["c"] = c };
 
-//            bool expected = discriminant >= 0 && a != 0;
+          bool expected = discriminant >= 0 && a != 0;
 
-//            Assert.True(
-//                WpInterpreter.Holds(result.Precondition, state) == expected,
-//                $"Для a={a}, b={b}, c={c} ожидалось {expected}.");
-//        }
-//    }
+          Assert.True(
+              WpInterpreter.Holds(result.Precondition, state) == expected,
+              $"Для a={a}, b={b}, c={c} ожидалось {expected}.");
+      }
+  }
 
-//    [Fact]
-//    public void Precondition_DivisionInCondition_RequiresNonZeroDivisor()
-//    {
-//        const string program = @"
+  [Fact]
+  public void Precondition_DivisionInCondition_RequiresNonZeroDivisor()
+  {
+      const string program = @"
 //if a / b > 1 then
-//    x := 1
+  x := 1
 //else
-//    x := 2
+  x := 2
 //end";
 
-//        AssertPreconditionMatchesExecution(program, "x > 0", new[] { "a", "b" }, -3, 3);
-//    }
+      AssertPreconditionMatchesExecution(program, "x > 0", new[] { "a", "b" }, -3, 3);
+  }
 
-//    [Fact]
-//    public void Precondition_DivisionInOneBranch_MatchesExecution()
-//    {
-//        const string program = @"
+  [Fact]
+  public void Precondition_DivisionInOneBranch_MatchesExecution()
+  {
+      const string program = @"
 //if a > 0 then
-//    x := 1 / a
+  x := 1 / a
 //else
-//    x := 0
+  x := 0
 //end";
 
-//        AssertPreconditionMatchesExecution(program, "x >= 0", new[] { "a" }, -4, 4);
-//    }
+      AssertPreconditionMatchesExecution(program, "x >= 0", new[] { "a" }, -4, 4);
+  }
 
-//    [Fact]
-//    public void Precondition_NestedIf_MatchesExecution()
-//    {
-//        const string program = @"
+  [Fact]
+  public void Precondition_NestedIf_MatchesExecution()
+  {
+      const string program = @"
 //if a > 0 then
-//    if b > 0 then
-//        r := 1
-//    else
-//        r := 2
-//    end
+  if b > 0 then
+      r := 1
+  else
+      r := 2
+  end
 //else
-//    r := 3
+  r := 3
 //end";
 
-//        AssertPreconditionMatchesExecution(program, "r > 1", new[] { "a", "b" }, -2, 2);
-//    }
+      AssertPreconditionMatchesExecution(program, "r > 1", new[] { "a", "b" }, -2, 2);
+  }
 
-//    [Fact]
-//    public void Precondition_BooleanVariableUsedAsCondition_MatchesExecution()
-//    {
-//        const string program = @"
+  [Fact]
+  public void Precondition_BooleanVariableUsedAsCondition_MatchesExecution()
+  {
+      const string program = @"
 //flag := a > b
 //if flag then
-//    m := a
+  m := a
 //else
-//    m := b
+  m := b
 //end";
 
-//        AssertPreconditionMatchesExecution(
-//            program,
-//            "m >= a && m >= b",
-//            new[] { "a", "b" },
-//            -3,
-//            3);
-//    }
+      AssertPreconditionMatchesExecution(
+          program,
+          "m >= a && m >= b",
+          new[] { "a", "b" },
+          -3,
+          3);
+  }
 
-//    [Fact]
-//    public void Precondition_SqrtThenArithmetic_MatchesExecution()
-//    {
-//        AssertPreconditionMatchesExecution(
-//            "y := sqrt(x)\nz := y + 1",
-//            "z >= 1",
-//            new[] { "x" },
-//            -4,
-//            4);
-//    }
+  [Fact]
+  public void Precondition_SqrtThenArithmetic_MatchesExecution()
+  {
+      AssertPreconditionMatchesExecution(
+          "y := sqrt(x)\nz := y + 1",
+          "z >= 1",
+          new[] { "x" },
+          -4,
+          4);
+  }
 
-//    [Fact]
-//    public void Precondition_DivisionChain_MatchesExecution()
-//    {
-//        AssertPreconditionMatchesExecution(
-//            "x := a / b\ny := x * 2",
-//            "y > 0",
-//            new[] { "a", "b" },
-//            -3,
-//            3);
-//    }
+  [Fact]
+  public void Precondition_DivisionChain_MatchesExecution()
+  {
+      AssertPreconditionMatchesExecution(
+          "x := a / b\ny := x * 2",
+          "y > 0",
+          new[] { "a", "b" },
+          -3,
+          3);
+  }
 
-//    [Fact]
-//    public void Precondition_ConjunctionInPostcondition_MatchesExecution()
-//    {
-//        AssertPreconditionMatchesExecution(
-//            "s := a + b\nd := a - b",
-//            "(s > d) && (s != 0)",
-//            new[] { "a", "b" },
-//            -3,
-//            3);
-//    }
+  [Fact]
+  public void Precondition_ConjunctionInPostcondition_MatchesExecution()
+  {
+      AssertPreconditionMatchesExecution(
+          "s := a + b\nd := a - b",
+          "(s > d) && (s != 0)",
+          new[] { "a", "b" },
+          -3,
+          3);
+  }*/
 
     [Fact]
     public void Precondition_MentionsOnlyInputVariables()
