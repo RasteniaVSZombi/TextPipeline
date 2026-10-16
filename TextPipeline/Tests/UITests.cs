@@ -10,12 +10,19 @@ using System.Windows.Data;
 using System.Windows.Media;
 using System.Windows.Threading;
 using TextPipeline;
+using TextPipeline.ViewModels;
+using WpEngine.Core;
+using WpEngine.Models;
 using Xunit;
 
 namespace Tests;
 
 public class UITests
 {
+    /// <summary>
+    /// Тесты первой вкладки
+    /// </summary>
+    
     [Fact]
     public void MainWindow_CanBeCreated()
     {
@@ -350,6 +357,365 @@ public class UITests
         Assert.Equal(3, textBoxCount);
     }
 
+    /// <summary>
+    /// UI-тесты второй вкладки «Конструктор фрагмента».
+    /// </summary>
+
+    [Fact]
+    public void FragmentConstructor_TabExists()
+    {
+        var header = RunOnUiThread(() =>
+        {
+            var window = new MainWindow();
+            window.Show();
+            window.UpdateLayout();
+            var tab = FindVisualChildren<TabItem>(window)
+                .FirstOrDefault(item => item.Header?.ToString() == "Конструктор фрагмента");
+            var result = tab?.Header?.ToString();
+            window.Close();
+            return result;
+        });
+        Assert.Equal("Конструктор фрагмента", header);
+    }
+
+    [Fact]
+    public void FragmentConstructor_CanBeSelected()
+    {
+        var selected = RunOnUiThread(() =>
+        {
+            var window = new MainWindow();
+            window.Show();
+            window.UpdateLayout();
+            var tabs = FindVisualChild<TabControl>(window);
+            if (tabs == null) { window.Close(); return false; }
+            var tab = tabs.Items.OfType<TabItem>().FirstOrDefault(x => x.Header?.ToString() == "Конструктор фрагмента");
+            if (tab == null) { window.Close(); return false; }
+            tabs.SelectedItem = tab;
+            window.UpdateLayout();
+            var result = tabs.SelectedItem == tab;
+            window.Close();
+            return result;
+        });
+        Assert.True(selected);
+    }
+
+    [Fact]
+    public void FragmentConstructor_ContainsExampleSelector()
+    {
+        var combo = RunOnUiThread(() =>
+        {
+            var window = new MainWindow(); window.Show(); window.UpdateLayout();
+            SelectFragmentTab(window); window.UpdateLayout();
+            var result = FindVisualChild<ComboBox>(window);
+            window.Close(); return result;
+        });
+        Assert.NotNull(combo);
+    }
+
+    [Fact]
+    public void FragmentConstructor_ExampleSelectorIsPopulated()
+    {
+        var count = RunOnUiThread(() =>
+        {
+            var window = new MainWindow(); window.Show(); window.UpdateLayout();
+            SelectFragmentTab(window); window.UpdateLayout();
+            var result = FindVisualChild<ComboBox>(window)?.Items.Count ?? 0;
+            window.Close(); return result;
+        });
+        Assert.Equal(4, count);
+    }
+
+    [Fact]
+    public void FragmentConstructor_ExampleSelectorDisplaysNames()
+    {
+        var displayMember = RunOnUiThread(() =>
+        {
+            var window = new MainWindow(); window.Show(); window.UpdateLayout();
+            SelectFragmentTab(window); window.UpdateLayout();
+            var result = FindVisualChild<ComboBox>(window)?.DisplayMemberPath;
+            window.Close(); return result;
+        });
+        Assert.Equal("Name", displayMember);
+    }
+
+    [Fact]
+    public void FragmentConstructor_ContainsPostconditionGroup()
+    {
+        var exists = RunOnUiThread(() =>
+        {
+            var window = new MainWindow(); window.Show(); window.UpdateLayout();
+            SelectFragmentTab(window); window.UpdateLayout();
+            var result = FindVisualChildren<GroupBox>(window).Any(x => x.Header?.ToString() == "Цель (Post)");
+            window.Close(); return result;
+        });
+        Assert.True(exists);
+    }
+
+    [Fact]
+    public void FragmentConstructor_ContainsProgramEditorGroup()
+    {
+        var exists = RunOnUiThread(() =>
+        {
+            var window = new MainWindow(); window.Show(); window.UpdateLayout();
+            SelectFragmentTab(window); window.UpdateLayout();
+            var result = FindVisualChildren<GroupBox>(window).Any(x => x.Header?.ToString() == "Код фрагмента");
+            window.Close(); return result;
+        });
+        Assert.True(exists);
+    }
+
+    [Fact]
+    public void FragmentConstructor_ContainsCalculateButton()
+    {
+        var button = RunOnUiThread(() =>
+        {
+            var window = new MainWindow(); window.Show(); window.UpdateLayout();
+            SelectFragmentTab(window); window.UpdateLayout();
+            var result = FindButtonByContent(window, "Рассчитать wp");
+            window.Close(); return result;
+        });
+        Assert.NotNull(button);
+    }
+
+    [Fact]
+    public void FragmentConstructor_ContainsShowTriadButton()
+    {
+        var button = RunOnUiThread(() =>
+        {
+            var window = new MainWindow(); window.Show(); window.UpdateLayout();
+            SelectFragmentTab(window); window.UpdateLayout();
+            var result = FindButtonByContent(window, "Показать триаду");
+            window.Close(); return result;
+        });
+        Assert.NotNull(button);
+    }
+
+    [Fact]
+    public void FragmentConstructor_ContainsWeakestPreconditionOutput()
+    {
+        var exists = RunOnUiThread(() =>
+        {
+            var window = new MainWindow(); window.Show(); window.UpdateLayout();
+            SelectFragmentTab(window); window.UpdateLayout();
+            var result = FindVisualChildren<GroupBox>(window).Any(x => x.Header?.ToString() == "Слабейшее предусловие (wp)");
+            window.Close(); return result;
+        });
+        Assert.True(exists);
+    }
+
+    [Fact]
+    public void FragmentConstructor_ContainsHoareTriadOutput()
+    {
+        var exists = RunOnUiThread(() =>
+        {
+            var window = new MainWindow(); window.Show(); window.UpdateLayout();
+            SelectFragmentTab(window); window.UpdateLayout();
+            var result = FindVisualChildren<GroupBox>(window).Any(x => x.Header?.ToString() == "Триада Хоара");
+            window.Close(); return result;
+        });
+        Assert.True(exists);
+    }
+
+    [Fact]
+    public void FragmentConstructor_ContainsDefinednessConditionsOutput()
+    {
+        var exists = RunOnUiThread(() =>
+        {
+            var window = new MainWindow(); window.Show(); window.UpdateLayout();
+            SelectFragmentTab(window); window.UpdateLayout();
+            var result = FindVisualChildren<GroupBox>(window).Any(x => x.Header?.ToString() == "Условия определённости");
+            window.Close(); return result;
+        });
+        Assert.True(exists);
+    }
+
+    [Fact]
+    public void FragmentConstructor_ContainsProgramAndResultTextBoxes()
+    {
+        var count = RunOnUiThread(() =>
+        {
+            var window = new MainWindow(); window.Show(); window.UpdateLayout();
+            SelectFragmentTab(window); window.UpdateLayout();
+            var result = FindVisualChildren<TextBox>(window).Count;
+            window.Close(); return result;
+        });
+        Assert.True(count >= 6);
+    }
+
+    [Fact]
+    public void FragmentConstructor_ResultFieldsAreReadOnly()
+    {
+        var readOnlyCount = RunOnUiThread(() =>
+        {
+            var window = new MainWindow(); window.Show(); window.UpdateLayout();
+            SelectFragmentTab(window); window.UpdateLayout();
+            var result = FindVisualChildren<TextBox>(window).Count(x => x.IsReadOnly);
+            window.Close(); return result;
+        });
+        Assert.True(readOnlyCount >= 3);
+    }
+
+    [Fact]
+    public void FragmentConstructor_ViewModelIsAttached()
+    {
+        var viewModelExists = RunOnUiThread(() =>
+        {
+            var window = new MainWindow();
+            var result = (window.DataContext as TextPipeline.ViewModels.MainViewModel)?.WpViewModel != null;
+            window.Close(); return result;
+        });
+        Assert.True(viewModelExists);
+    }
+
+    [Fact]
+    public void FragmentConstructor_ExamplesAreLoadedInitially()
+    {
+        var data = RunOnUiThread(() =>
+        {
+            var window = new MainWindow();
+            var vm = (window.DataContext as TextPipeline.ViewModels.MainViewModel)?.WpViewModel;
+            var result = (Count: vm?.Examples.Count ?? 0, Selected: vm?.SelectedExample != null);
+            window.Close(); return result;
+        });
+        Assert.Equal(4, data.Count);
+        Assert.True(data.Selected);
+    }
+
+    [Fact]
+    public void FragmentConstructor_SelectingExampleLoadsProgramAndPostcondition()
+    {
+        var loaded = RunOnUiThread(() =>
+        {
+            var window = new MainWindow();
+            var vm = (window.DataContext as TextPipeline.ViewModels.MainViewModel)!.WpViewModel;
+            if (vm.Examples.Count < 2) { window.Close(); return false; }
+            var example = vm.Examples[1];
+            vm.SelectedExample = example;
+            var result = vm.ProgramText == example.Program &&
+                         vm.Postcondition == example.Postcondition &&
+                         vm.PostconditionHuman == example.PostconditionDescription;
+            window.Close(); return result;
+        });
+        Assert.True(loaded);
+    }
+
+    [Fact]
+    public void FragmentConstructor_CalculateCommandIsAvailable()
+    {
+        var canExecute = RunOnUiThread(() =>
+        {
+            var window = new MainWindow();
+            var vm = (window.DataContext as TextPipeline.ViewModels.MainViewModel)!.WpViewModel;
+            var result = vm.CalculateCommand.CanExecute(null);
+            window.Close(); return result;
+        });
+        Assert.True(canExecute);
+    }
+
+    [Fact]
+    public void FragmentConstructor_CalculationOfDefaultExampleSucceeds()
+    {
+        var result = RunOnUiThread(() =>
+        {
+            var window = new MainWindow();
+            var vm = (window.DataContext as TextPipeline.ViewModels.MainViewModel)!.WpViewModel;
+            vm.Calculate();
+            var data = (vm.IsSuccess, vm.Precondition, vm.ErrorMessage);
+            window.Close(); return data;
+        });
+        Assert.True(result.IsSuccess);
+        Assert.False(string.IsNullOrWhiteSpace(result.Precondition));
+        Assert.True(string.IsNullOrEmpty(result.ErrorMessage));
+    }
+
+    [Fact]
+    public void FragmentConstructor_CalculationPopulatesAnalysisResults()
+    {
+        var result = RunOnUiThread(() =>
+        {
+            var window = new MainWindow();
+            var vm = (window.DataContext as TextPipeline.ViewModels.MainViewModel)!.WpViewModel;
+            vm.Calculate();
+            var data = (vm.VariablesText, vm.AssignmentsText, vm.StepsText, vm.StatementCount);
+            window.Close(); return data;
+        });
+        Assert.False(string.IsNullOrWhiteSpace(result.StepsText));
+        Assert.True(result.StatementCount > 0);
+    }
+
+    [Fact]
+    public void FragmentConstructor_ShowTriadButtonStartsDisabled()
+    {
+        var isEnabled = RunOnUiThread(() =>
+        {
+            var window = new MainWindow(); window.Show(); window.UpdateLayout();
+            SelectFragmentTab(window); window.UpdateLayout();
+            var result = FindButtonByContent(window, "Показать триаду")?.IsEnabled ?? false;
+            window.Close(); return result;
+        });
+        Assert.False(isEnabled);
+    }
+
+    [Fact]
+    public void FragmentConstructor_ShowTriadCommandCreatesHoareTriadAfterCalculation()
+    {
+        var triad = RunOnUiThread(() =>
+        {
+            var window = new MainWindow();
+            var vm = (window.DataContext as TextPipeline.ViewModels.MainViewModel)!.WpViewModel;
+            vm.Calculate();
+            vm.ShowTriadCommand.Execute(null);
+            var result = vm.TriadShort;
+            window.Close(); return result;
+        });
+        Assert.Contains("Слабейшее предусловие", triad);
+        Assert.Contains("Программа:", triad);
+        Assert.Contains("Постусловие:", triad);
+    }
+
+    [Fact]
+    public void FragmentConstructor_InvalidProgramShowsError()
+    {
+        var result = RunOnUiThread(() =>
+        {
+            var window = new MainWindow();
+            var vm = (window.DataContext as TextPipeline.ViewModels.MainViewModel)!.WpViewModel;
+            vm.ProgramText = "if (";
+            vm.Postcondition = "x > 0";
+            vm.Calculate();
+            var data = (vm.IsSuccess, vm.ErrorMessage);
+            window.Close(); return data;
+        });
+        Assert.False(result.IsSuccess);
+        Assert.False(string.IsNullOrWhiteSpace(result.ErrorMessage));
+    }
+
+    [Fact]
+    public void FragmentConstructor_InvalidCalculationDoesNotCreateTriad()
+    {
+        var triad = RunOnUiThread(() =>
+        {
+            var window = new MainWindow();
+            var vm = (window.DataContext as TextPipeline.ViewModels.MainViewModel)!.WpViewModel;
+            vm.ProgramText = "if (";
+            vm.Postcondition = "x > 0";
+            vm.Calculate();
+            vm.ShowTriadCommand.Execute(null);
+            var result = vm.TriadShort;
+            window.Close(); return result;
+        });
+        Assert.Equal(string.Empty, triad);
+    }
+
+    private static void SelectFragmentTab(MainWindow window)
+    {
+        var tabs = FindVisualChild<TabControl>(window);
+        if (tabs == null) return;
+        var tab = tabs.Items.OfType<TabItem>()
+            .FirstOrDefault(item => item.Header?.ToString() == "Конструктор фрагмента");
+        if (tab != null) tabs.SelectedItem = tab;
+    }
+
     [Fact]
     public void ContractWindow_CanBeCreated()
     {
@@ -594,6 +960,11 @@ public class UITests
                     _application.ShutdownMode = ShutdownMode.OnExplicitShutdown;
 
                     // Добавляем необходимые ресурсы интерфейса для тестовой среды.
+                    // MainWindow.xaml обращается к BackgroundBrush уже на TabControl,
+                    // поэтому ресурс должен быть зарегистрирован до создания окна.
+                    _application.Resources["BackgroundBrush"] =
+                        new SolidColorBrush(Color.FromRgb(255, 247, 235));
+
                     _application.Resources["BorderBrush"] =
                         new SolidColorBrush(Colors.LightGray);
 
@@ -633,7 +1004,6 @@ public class UITests
             }
         }
     }
-
     private class BoolToColorConverter : IValueConverter
     {
         public object Convert(
