@@ -231,40 +231,4 @@ end";
         Assert.Contains(conditions, c => c.Contains("!= 0"));
         Assert.Contains("(D) >= 0", conditions);
     }
-
-    /*[Fact]
-    public void ExecuteExample_MaxExample_PostconditionIsAlwaysSatisfiable()
-    {
-         Для корректной программы «максимум» предусловие не накладывает ограничений на a и b.
-        WpExecutionResult result = _service.ExecuteExample(1);
-
-        Assert.True(result.Calculation.Success);
-
-        foreach (int[] values in WpInterpreter.Grid(2, -3, 3))
-        {
-            var state = new Dictionary<string, object>
-            {
-                ["a"] = (double)values[0],
-                ["b"] = (double)values[1]
-            };
-
-            Assert.True(WpInterpreter.Holds(result.Calculation.Precondition, state));
-        }
-    }
-
-    [Fact]
-    public void ExecuteExample_SequenceExample_RequiresAGreaterThanTwo()
-    {
-         z = (a + 2) * 3 - 4 > 10  <=>  a > 2.
-        WpExecutionResult result = _service.ExecuteExample(3);
-
-        Assert.True(result.Calculation.Success);
-
-        foreach (int a in Enumerable.Range(-5, 11))
-        {
-            var state = new Dictionary<string, object> { ["a"] = (double)a };
-
-            Assert.Equal(a > 2, WpInterpreter.Holds(result.Calculation.Precondition, state));
-        }
-    }*/
 }
