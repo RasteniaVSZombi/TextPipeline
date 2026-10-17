@@ -291,7 +291,7 @@ var assemblies = [
     "name": "Domain",
     "classes": [
       { "name": "Domain.Guard", "rp": "Domain_Guard.html", "cl": 10, "ucl": 0, "cal": 10, "tl": 23, "cb": 4, "tb": 4, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "Domain.TextOperations", "rp": "Domain_TextOperations.html", "cl": 51, "ucl": 0, "cal": 51, "tl": 116, "cb": 25, "tb": 26, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "Domain.TextOperations", "rp": "Domain_TextOperations.html", "cl": 54, "ucl": 0, "cal": 54, "tl": 119, "cb": 25, "tb": 26, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "WpEngine.Core.BinaryExpr", "rp": "Domain_BinaryExpr.html", "cl": 4, "ucl": 0, "cal": 4, "tl": 350, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "WpEngine.Core.BooleanExpr", "rp": "Domain_BooleanExpr.html", "cl": 1, "ucl": 0, "cal": 1, "tl": 350, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "WpEngine.Core.ExamplePrograms", "rp": "Domain_ExamplePrograms.html", "cl": 66, "ucl": 0, "cal": 66, "tl": 74, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
@@ -326,7 +326,7 @@ var assemblies = [
       { "name": "TextPipeline.RelayCommand", "rp": "TextPipeline_RelayCommand.html", "cl": 8, "ucl": 0, "cal": 8, "tl": 53, "cb": 4, "tb": 6, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "TextPipeline.ViewModels.MainViewModel", "rp": "TextPipeline_MainViewModel.html", "cl": 15, "ucl": 0, "cal": 15, "tl": 56, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "TextPipeline.ViewModels.OperationViewModelBase", "rp": "TextPipeline_OperationViewModelBase.html", "cl": 11, "ucl": 10, "cal": 21, "tl": 120, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "TextPipeline.ViewModels.WpViewModel", "rp": "TextPipeline_WpViewModel.html", "cl": 86, "ucl": 9, "cal": 95, "tl": 229, "cb": 14, "tb": 16, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "TextPipeline.ViewModels.WpViewModel", "rp": "TextPipeline_WpViewModel.html", "cl": 91, "ucl": 4, "cal": 95, "tl": 229, "cb": 16, "tb": 16, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
     ]},
 ];
 
