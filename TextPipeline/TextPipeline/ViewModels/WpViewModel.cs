@@ -27,6 +27,7 @@ public sealed class WpViewModel : ObservableObject
     private string _errorMessage = "";
     private string _stepsText = "";
     private string _definednessConditionsText = "";
+    private bool _hasDefinednessConditions;
     private string _variablesText = "";
     private string _assignmentsText = "";
     private string _conditionsText = "";
@@ -91,6 +92,13 @@ public sealed class WpViewModel : ObservableObject
         get => _definednessConditionsText;
         private set => Set(ref _definednessConditionsText, value);
     }
+
+    public bool HasDefinednessConditions
+    {
+        get => _hasDefinednessConditions;
+        private set => Set(ref _hasDefinednessConditions, value);
+    }
+
 
     /// <summary>Переменные, найденные в программе.</summary>
     public string VariablesText
@@ -219,6 +227,7 @@ public sealed class WpViewModel : ObservableObject
 
         StepsText = string.Join(Environment.NewLine, calculation.Steps);
         DefinednessConditionsText = string.Join(Environment.NewLine, calculation.DefinednessConditions);
+        HasDefinednessConditions = !string.IsNullOrEmpty(DefinednessConditionsText);
         StatementCount = result.StatementCount;
         BranchCount = result.BranchCount;
         VariablesText = string.Join(", ", result.Variables);

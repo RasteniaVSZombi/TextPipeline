@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -10,6 +11,7 @@ using System.Windows.Data;
 using System.Windows.Media;
 using System.Windows.Threading;
 using TextPipeline;
+using TextPipeline.Converters;
 using TextPipeline.ViewModels;
 using WpEngine.Core;
 using WpEngine.Models;
@@ -997,6 +999,9 @@ public class UITests
                     _application.Resources["BoolToText"] =
                         new BoolToTextConverter();
 
+                    _application.Resources["BoolToVisibility"] =
+                        new BoolToVisibilityConverter();
+
                     // Получаем диспетчер созданного WPF-потока.
                     _dispatcher = Dispatcher.CurrentDispatcher;
 
@@ -1053,6 +1058,27 @@ public class UITests
 
         public object ConvertBack(
             object value,
+            Type targetType,
+            object parameter,
+            System.Globalization.CultureInfo culture)
+        {
+            throw new NotSupportedException();
+        }
+    }
+
+    public class BoolToVisibilityConverter : IValueConverter
+    {
+        public object Convert(
+            object value,
+            Type targetType,
+            object parameter,
+            System.Globalization.CultureInfo culture)
+        {
+            // Преобразуем логическое значение в видимость для тестового ресурса.
+            return value is bool boolean && boolean ? "Да" : "Нет";
+        }
+
+        public object ConvertBack(object value,
             Type targetType,
             object parameter,
             System.Globalization.CultureInfo culture)

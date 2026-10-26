@@ -8,6 +8,7 @@
         <!-- Конвертеры -->
         <converters:BoolToColorConverter x:Key="BoolToColor"/>
         <converters:BoolToTextConverter x:Key="BoolToText"/>
+        <converters:BoolToVisibilityConverter x:Key="BoolToVisibility"/>
 
         <!--  ЦВЕТОВАЯ ПАЛИТРА (БЕЖЕВАЯ ТЕМА)  -->
         <!-- Основной фон окна — мягкий бежевый (Linen) -->

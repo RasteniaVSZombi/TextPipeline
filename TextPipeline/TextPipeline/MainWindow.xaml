@@ -9,7 +9,7 @@
     <Window.DataContext>
         <vm:MainViewModel/>
     </Window.DataContext>
-    
+
     <TabControl Background="{StaticResource BackgroundBrush}">
         <!-- ВКЛАДКА Текстовый конвертер -->
         <TabItem Header="Текстовый конвертер">
@@ -369,7 +369,13 @@
                             Margin="0 0 10 0"
                             Background="{StaticResource SuccessButtonBrush}"
                             Width="150"
-                            Height="44" MinHeight="35" Padding="5"/>    
+                            Height="44" MinHeight="35" Padding="5">
+                        <Button.ToolTip>
+                                <ToolTip Background="#212121" Foreground="White" Padding="10" FontSize="14">
+                                <TextBlock Text="Рассчитать слабейшее предусловие (wp) - это процесс автоматического вычисления начального условия, при котором программа гарантированно достигнет заданного конечного состояния (постусловия)"/>
+                            </ToolTip>
+                            </Button.ToolTip>
+                        </Button>
 
                         <Button 
                             Content="Показать триаду"
@@ -379,7 +385,13 @@
                             Width="150"
                             Height="44"
                             MinHeight="35"
-                            Padding="5"/>
+                            Padding="5">
+                            <Button.ToolTip>
+                                <ToolTip Background="#212121" Foreground="White" Padding="10" FontSize="14">
+                                    <TextBlock Text="Триада Хоара - это формальное представление {Предусловие} Программа {Постусловие}, которое показывает связь между начальным и конечным состоянием программы"/>
+                                </ToolTip>
+                            </Button.ToolTip>
+                        </Button>
                     </StackPanel>
 
                     <!-- Основная область -->
@@ -390,12 +402,12 @@
                         </Grid.ColumnDefinitions>
 
                         <!-- Шаги вычисления -->
-                        <Border Grid.Column="0" Padding="5" BorderThickness="1" BorderBrush="{StaticResource BorderBrush}">
+                        <GroupBox Grid.Column="0" Header="Пошаговые вычисления">
                             <TextBox Text="{Binding StepsText, Mode=OneWay}"
                                    FontFamily="Consolas"
                                    Margin="5"
                                    TextWrapping="Wrap"/>
-                        </Border>
+                        </GroupBox>
 
                         <!-- Результаты -->
                         <Grid Grid.Column="1">
@@ -441,7 +453,8 @@
 
 
                             <!-- Условия определённости -->
-                            <GroupBox Grid.Row="2" Header="Условия определённости">
+                            <GroupBox Grid.Row="2" Header="Условия определённости" Visibility="{Binding HasDefinednessConditions, Converter={StaticResource BoolToVisibility}}">
+                                
                                 <TextBox Text="{Binding DefinednessConditionsText, Mode=OneWay}"
                                     IsReadOnly="True"
                                     FontFamily="Consolas"
@@ -450,9 +463,9 @@
                             </GroupBox>
 
                             <!-- Сообщения об ошибках -->
-                            <TextBlock Grid.Row="3"
+                            <TextBlock Grid.Row="2"
                                 Foreground="Red"
-                                Text="{Binding ErrorMessage}"/>
+                                Text="{Binding ErrorMessage}" TextWrapping="Wrap" Margin="10,74,0,-106" Grid.RowSpan="2" FontSize="20"/>
                         </Grid>
                     </Grid>
                 </Grid>
