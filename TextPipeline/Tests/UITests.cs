@@ -423,7 +423,7 @@ public class UITests
             var result = FindVisualChild<ComboBox>(window)?.Items.Count ?? 0;
             window.Close(); return result;
         });
-        Assert.Equal(4, count);
+        Assert.Equal(7, count);
     }
 
     [Fact]
@@ -578,7 +578,7 @@ public class UITests
             var result = (Count: vm?.Examples.Count ?? 0, Selected: vm?.SelectedExample != null);
             window.Close(); return result;
         });
-        Assert.Equal(4, data.Count);
+        Assert.Equal(7, data.Count);
         Assert.True(data.Selected);
     }
 

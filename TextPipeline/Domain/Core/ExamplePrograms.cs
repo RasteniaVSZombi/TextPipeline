@@ -69,6 +69,61 @@ public static class ExamplePrograms
                 "z > 10",
                 "После выполнения последовательности значение z " +
                 "должно быть больше 10."
+            ),
+
+            new(
+                "Поиск максимальной длины слов",
+                """
+                if wordLength1 >= wordLength2 then
+                    maxLength := wordLength1
+                else
+                    maxLength := wordLength2
+                end
+                """,
+                "(maxLength >= wordLength1) && (maxLength >= wordLength2) && " +
+                "((maxLength == wordLength1) || (maxLength == wordLength2))",
+                "После выполнения переменная maxLength содержит " +
+                "максимальную длину из двух проанализированных слов текста."
+            ),
+
+            new(
+                "Анализ форматирования текста",
+                """
+                D := lineLength * lineLength - 4 * paragraph * minWidth
+                if D < 0 then
+                    formatStatus := 0
+                    lineStart := 0
+                    lineEnd := 0
+                else
+                    if D == 0 then
+                        formatStatus := 1
+                        lineStart := -lineLength / (2 * paragraph)
+                        lineEnd := lineStart
+                    else
+                        formatStatus := 2
+                        lineStart := (-lineLength - sqrt(D)) / (2 * paragraph)
+                        lineEnd := (-lineLength + sqrt(D)) / (2 * paragraph)
+                    end
+                end
+                """,
+                "formatStatus > 0",
+                "После выполнения программа определяет корректность " +
+                "форматирования текстового блока. Предполагается, " +
+                "что ширина абзаца не равна нулю."
+            ),
+
+            new(
+                "Преобразование текстового формата",
+                """
+                processedLength := originalLength + 2
+                formattedLength := processedLength * 3
+                finalLength := formattedLength - 4
+                """,
+                "finalLength > 10",
+                "После последовательной обработки текста " +
+                "итоговая длина форматированного текста " +
+                "должна превышать 10 символов."
             )
+
         };
 }

@@ -122,11 +122,14 @@ end";
     {
         IReadOnlyList<WpExample> examples = _service.GetExamples();
 
-        Assert.Equal(4, examples.Count);
+        Assert.Equal(7, examples.Count);
         Assert.Equal("Ручной ввод", examples[0].Name);
         Assert.Equal("Максимум двух чисел", examples[1].Name);
         Assert.Equal("Квадратное уравнение", examples[2].Name);
         Assert.Equal("Последовательность присваиваний", examples[3].Name);
+        Assert.Equal("Поиск максимальной длины слов", examples[4].Name);
+        Assert.Equal("Анализ форматирования текста", examples[5].Name);
+        Assert.Equal("Преобразование текстового формата", examples[6].Name);
     }
 
     [Fact]
@@ -191,7 +194,7 @@ end";
 
     [Theory]
     [InlineData(-1)]
-    [InlineData(4)]
+    [InlineData(8)]
     [InlineData(100)]
     public void ExecuteExample_IndexOutOfRange_ReturnsFailureWithIndexInMessage(int index)
     {
