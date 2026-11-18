@@ -370,10 +370,10 @@
                             Background="{StaticResource SuccessButtonBrush}"
                             Width="150"
                             Height="44" MinHeight="35" Padding="5">
-                        <Button.ToolTip>
+                            <Button.ToolTip>
                                 <ToolTip Background="#212121" Foreground="White" Padding="10" FontSize="14">
-                                <TextBlock Text="Рассчитать слабейшее предусловие (wp) - это процесс автоматического вычисления начального условия, при котором программа гарантированно достигнет заданного конечного состояния (постусловия)"/>
-                            </ToolTip>
+                                    <TextBlock Text="Рассчитать слабейшее предусловие (wp) - это процесс автоматического вычисления начального условия, при котором программа гарантированно достигнет заданного конечного состояния (постусловия)"/>
+                                </ToolTip>
                             </Button.ToolTip>
                         </Button>
 
@@ -454,7 +454,7 @@
 
                             <!-- Условия определённости -->
                             <GroupBox Grid.Row="2" Header="Условия определённости" Visibility="{Binding HasDefinednessConditions, Converter={StaticResource BoolToVisibility}}">
-                                
+
                                 <TextBox Text="{Binding DefinednessConditionsText, Mode=OneWay}"
                                     IsReadOnly="True"
                                     FontFamily="Consolas"
@@ -468,6 +468,217 @@
                                 Text="{Binding ErrorMessage}" TextWrapping="Wrap" Margin="10,74,0,-106" Grid.RowSpan="2" FontSize="20"/>
                         </Grid>
                     </Grid>
+                </Grid>
+            </ScrollViewer>
+        </TabItem>
+        <TabItem Header="Циклы">
+            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                <Grid Margin="10">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <!-- Панель Данных -->
+                        <RowDefinition Height="Auto"/>
+                        <!-- Выбор режима -->
+                        <RowDefinition Height="Auto"/>
+                        <!-- Управление -->
+                        <RowDefinition Height="*"/>
+                        <!-- Таблица массива -->
+                        <RowDefinition Height="Auto"/>
+                        <!-- Инварианты и Вариант -->
+                        <RowDefinition Height="Auto"/>
+                        <!-- Проверка WP -->
+                    </Grid.RowDefinitions>
+
+                    <!-- 2.1. Панель «Данные» -->
+                    <GroupBox Header="Генератор данных" Grid.Row="0" Margin="0,0,0,10">
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <TextBlock Text="Длина (N):" VerticalAlignment="Center" Margin="5,0"/>
+                            <TextBox Text="{Binding ArrayLength}" Width="60" Margin="5,0"/>
+
+                            <TextBlock Text="Мин:" VerticalAlignment="Center" Margin="10,0,5,0"/>
+                            <TextBox Text="{Binding MinValue}" Width="60" Margin="0,0,5,0"/>
+
+                            <TextBlock Text="Макс:" VerticalAlignment="Center" Margin="5,0"/>
+                            <TextBox Text="{Binding MaxValue}" Width="60" Margin="5,0"/>
+
+                            <TextBlock Text="Порог (T):" VerticalAlignment="Center" Margin="10,0,5,0"/>
+                            <TextBox Text="{Binding Threshold}" Width="60" Margin="0,0,5,0"/>
+
+                            <Button Content="Сгенерировать" Command="{Binding GenerateCommand}" Margin="10,0"/>
+                        </StackPanel>
+                    </GroupBox>
+
+                    <!-- 2.2. Режимы -->
+                    <GroupBox Header="Режим алгоритма" Grid.Row="1" Margin="0,0,0,10">
+                        <StackPanel Orientation="Horizontal">
+                            <RadioButton Content="PrefixSum (Сумма)" IsChecked="{Binding IsPrefixSumMode}" GroupName="AlgoMode" Margin="5"/>
+                            <RadioButton Content="Count > T (Счетчик)" IsChecked="{Binding IsCountMode}" GroupName="AlgoMode" Margin="5"/>
+                            <RadioButton Content="PrefixMax (Максимум)" IsChecked="{Binding IsMaxMode}" GroupName="AlgoMode" Margin="5"/>
+                        </StackPanel>
+                    </GroupBox>
+
+                    <!-- 2.3. Исполнение -->
+                    <StackPanel Orientation="Horizontal" Grid.Row="2" HorizontalAlignment="Center" Margin="0,0,0,10">
+                        <Button Content="Сброс" Command="{Binding ResetCommand}" Width="80" Margin="5"/>
+                        <Button Content="Шаг" Command="{Binding StepCommand}" Width="80" Margin="5"/>
+                        <Button Content="Пуск" Command="{Binding RunCommand}" Width="80" Margin="5"/>
+
+                        <TextBlock Text="Индекс j:" VerticalAlignment="Center" Margin="15,0,5,0" FontWeight="Bold"/>
+                        <TextBlock Text="{Binding CurrentIndex}" VerticalAlignment="Center" Width="30" Background="LightYellow"/>
+                    </StackPanel>
+
+                    <!-- Таблица массива (Редактируемая) -->
+                    <GroupBox Header="Массив A[]" Grid.Row="3" Margin="0,0,0,10">
+                        <DataGrid ItemsSource="{Binding ArrayItems}" 
+                          AutoGenerateColumns="False" 
+                          CanUserAddRows="False"
+                          IsReadOnly="False">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Индекс" Binding="{Binding Index}" IsReadOnly="True" Width="50"/>
+                                <DataGridTextColumn Header="Значение" Binding="{Binding Value, UpdateSourceTrigger=PropertyChanged}" Width="*"/>
+                            </DataGrid.Columns>
+                            <!-- Стиль для подсветки текущей ячейки и измененных -->
+                            <DataGrid.RowStyle>
+                                <Style TargetType="DataGridRow">
+                                    <Style.Triggers>
+                                        <!-- Подсветка текущего индекса j -->
+                                        <DataTrigger Binding="{Binding IsCurrent}" Value="True">
+                                            <Setter Property="Background" Value="#FFFFE0"/>
+                                            <!-- Светло-желтый -->
+                                            <Setter Property="BorderBrush" Value="Orange"/>
+                                            <Setter Property="BorderThickness" Value="2"/>
+                                        </DataTrigger>
+                                        <!-- Подсветка измененных ячеек (если есть свойство IsModified) -->
+                                        <DataTrigger Binding="{Binding IsModified}" Value="True">
+                                            <Setter Property="Background" Value="#FFD0F0C0"/>
+                                            <!-- Светло-зеленый -->
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.RowStyle>
+                        </DataGrid>
+                    </GroupBox>
+
+                    <!-- 2.4. Блок «Инвариант и вариант» -->
+                    <GroupBox Header="Инвариант и Вариант-функция" Grid.Row="4" Margin="0,0,0,10">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <!-- Левая часть: Инвариант -->
+                            <StackPanel Grid.Column="0" Margin="5">
+                                <TextBlock Text="Инвариант (словами):" FontWeight="Bold"/>
+                                <TextBox Text="{Binding InvariantText}" IsReadOnly="True" TextWrapping="Wrap" Height="60" Margin="0,2"/>
+
+                                <TextBlock Text="Инвариант (формула):" FontWeight="Bold" Margin="0,5,0,0"/>
+                                <TextBox Text="{Binding InvariantFormula}" IsReadOnly="True" FontFamily="Consolas" Margin="0,2"/>
+
+                                <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+                                    <TextBlock Text="Истинность до шага:" Margin="0,0,5,0"/>
+                                    <Ellipse Width="15" Height="15" Fill="{Binding InvariantBeforeColor}" Stroke="Gray" ToolTip="Состояние инварианта перед выполнением тела цикла"/>
+
+                                    <TextBlock Text="Истинность после шага:" Margin="15,0,5,0"/>
+                                    <Ellipse Width="15" Height="15" Fill="{Binding InvariantAfterColor}" Stroke="Gray" ToolTip="Состояние инварианта после выполнения тела цикла"/>
+                                </StackPanel>
+                            </StackPanel>
+
+                            <!-- Правая часть: Вариант-функция -->
+                            <StackPanel Grid.Column="1" Margin="5">
+                                <TextBlock Text="Вариант-функция t(j):" FontWeight="Bold"/>
+                                <TextBox Text="{Binding VariantFunctionFormula}" IsReadOnly="True" FontFamily="Consolas" Margin="0,2"/>
+
+                                <TextBlock Text="Текущее значение t:" Margin="0,5,0,0"/>
+                                <ProgressBar Minimum="0" Maximum="{Binding MaxVariantValue}" Value="{Binding CurrentVariantValue}" Height="20" Margin="0,2">
+                                    <ProgressBar.ToolTip>
+                                        <ToolTip>
+                                            <StackPanel>
+                                                <TextBlock Text="Прогресс убывания вариант-функции"/>
+                                                <TextBlock Text="Должна строго убывать и быть >= 0"/>
+                                            </StackPanel>
+                                        </ToolTip>
+                                    </ProgressBar.ToolTip>
+                                </ProgressBar>
+                                <TextBlock Text="{Binding CurrentVariantValue}" HorizontalAlignment="Right" FontSize="10"/>
+                            </StackPanel>
+                        </Grid>
+                    </GroupBox>
+
+                    <!-- 2.5. Блок «Проверка сохранения (wp)» -->
+                    <GroupBox Header="Формальная проверка корректности" Grid.Row="5">
+                        <StackPanel>
+                            <!-- Формула wp -->
+                            <TextBlock Text="Условие сохранения: (Inv ∧ B) ⇒ wp(S, Inv)" 
+                               FontWeight="Bold" FontFamily="Consolas" Margin="0,0,0,5"/>
+
+                            <!-- Список 4 условий -->
+                            <ItemsControl ItemsSource="{Binding CorrectnessConditions}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal" Margin="0,2">
+                                            <!-- Галочка или крестик -->
+                                            <TextBlock Text="{Binding StatusSymbol}" 
+                                               Foreground="{Binding StatusColor}" 
+                                               FontWeight="Bold" Width="20"/>
+                                            <TextBlock Text="{Binding Description}" Margin="5,0"/>
+                                            <!-- Всплывающая подсказка с определением -->
+                                            <StackPanel.ToolTip>
+                                                <ToolTip>
+                                                    <TextBlock Text="{Binding Definition}" TextWrapping="Wrap" Width="200"/>
+                                                </ToolTip>
+                                            </StackPanel.ToolTip>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                            <!-- 2.6. Блок «Проверка определённости (Def)» -->
+                            <GroupBox Header="Условия определённости (Def)" Grid.Row="5" Margin="0,0,0,10">
+                                <StackPanel>
+                                    <TextBlock Text="Ограничения на данные и операции:" FontWeight="Bold" Margin="0,0,0,5"/>
+
+                                    <!-- Список условий Def -->
+                                    <ItemsControl ItemsSource="{Binding DefConditions}">
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <StackPanel Orientation="Horizontal" Margin="0,2">
+                                                    <!-- Индикатор статуса -->
+                                                    <TextBlock Text="{Binding StatusSymbol}" 
+                                   Foreground="{Binding StatusColor}" 
+                                   FontWeight="Bold" Width="20"/>
+
+                                                    <!-- Описание условия -->
+                                                    <TextBlock Text="{Binding Description}" Margin="5,0"/>
+
+                                                    <!-- Всплывающая подсказка с математическим обоснованием -->
+                                                    <StackPanel.ToolTip>
+                                                        <ToolTip>
+                                                            <StackPanel>
+                                                                <TextBlock Text="{Binding Definition}" TextWrapping="Wrap" Width="250"/>
+                                                                <TextBlock Text="Требуется для корректного вычисления wp(S, Inv)" FontStyle="Italic" Margin="0,5,0,0"/>
+                                                            </StackPanel>
+                                                        </ToolTip>
+                                                    </StackPanel.ToolTip>
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+
+                                    <!-- Итоговый статус определённости -->
+                                    <Border Background="{Binding DefOverallColor}" Padding="5" Margin="0,5,0,0" CornerRadius="3">
+                                        <TextBlock Text="{Binding DefOverallStatus}" 
+                       HorizontalAlignment="Center" 
+                       FontWeight="Bold" 
+                       Foreground="White"/>
+                                    </Border>
+                                </StackPanel>
+                            </GroupBox>
+
+                            <!-- Разбор формулы словами -->
+                            <TextBlock Text="{Binding WpExplanation}" TextWrapping="Wrap" Margin="0,10,0,0" FontStyle="Italic" Foreground="DarkSlateGray"/>
+                        </StackPanel>
+                    </GroupBox>
+
                 </Grid>
             </ScrollViewer>
         </TabItem>
